@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'
+import { Component } from '@angular/core'
 
 import { ContactComponent } from './contact/contact.component'
 import { SkillsComponent } from './skills/skills.component'
@@ -10,8 +10,6 @@ import { WorkComponent } from './work/work.component'
   standalone: true,
   imports: [CommonModule, ContactComponent, SkillsComponent, WorkComponent],
   templateUrl: './top.component.html',
-  styleUrls: ['./top.component.scss']
+  styleUrls: ['./top.component.scss'],
 })
-export class TopComponent {
-
-}
+export class TopComponent {}

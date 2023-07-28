@@ -5,7 +5,12 @@
       {{ skill.skill }}
     </h2>
     <mat-list role="list">
-      <mat-list-item *ngFor="let item of skill.items" [matTooltip]="item.tooltip" matTooltipPosition="above" matTooltipClass="ui-tooltip">
+      <mat-list-item
+        *ngFor="let item of skill.items"
+        [matTooltip]="item.tooltip"
+        matTooltipPosition="above"
+        matTooltipClass="ui-tooltip"
+      >
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <div matListItemTitle>{{ item.title }}</div>
         <div matListItemLine>

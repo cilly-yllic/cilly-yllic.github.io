@@ -1,11 +1,11 @@
-@use "sass:math";
+@use 'sass:math';
 
 @mixin aspect-ratio($width, $height) {
   position: relative;
 
   &:before {
     display: block;
-    content: "";
+    content: '';
     width: 100%;
     padding-top: ($height / $width) * 100%;
   }
@@ -35,7 +35,7 @@
   border: 1px solid #fff;
 }
 
-.ui-thumbnail{
+.ui-thumbnail {
   position: absolute;
   top: 0;
   left: 0;
@@ -52,7 +52,7 @@ section {
   padding: 50px 0;
   font-weight: bold;
   font-size: 1em;
-  font-family :Quicksand, sans-serif;
+  font-family: Quicksand, sans-serif;
 }
 
 .ui-container {
@@ -77,19 +77,43 @@ section {
     padding: 0;
     position: absolute;
 
-    &:nth-of-type(6):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type { margin-left: -500%; }
-    &:nth-of-type(5):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type { margin-left: -400%; }
-    &:nth-of-type(4):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type { margin-left: -300%; }
-    &:nth-of-type(3):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type { margin-left: -200%; }
-    &:nth-of-type(2):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type { margin-left: -100%; }
-    &:nth-of-type(1):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type { margin-left: 0%; }
+    &:nth-of-type(6):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type {
+      margin-left: -500%;
+    }
+    &:nth-of-type(5):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type {
+      margin-left: -400%;
+    }
+    &:nth-of-type(4):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type {
+      margin-left: -300%;
+    }
+    &:nth-of-type(3):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type {
+      margin-left: -200%;
+    }
+    &:nth-of-type(2):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type {
+      margin-left: -100%;
+    }
+    &:nth-of-type(1):checked ~ .ui-carousel-slides .ui-carousel-slide:first-of-type {
+      margin-left: 0%;
+    }
 
-    &:nth-of-type(1):checked ~ .ui-carousel-thumbnails li:nth-of-type(1) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-    &:nth-of-type(2):checked ~ .ui-carousel-thumbnails li:nth-of-type(2) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-    &:nth-of-type(3):checked ~ .ui-carousel-thumbnails li:nth-of-type(3) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-    &:nth-of-type(4):checked ~ .ui-carousel-thumbnails li:nth-of-type(4) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-    &:nth-of-type(5):checked ~ .ui-carousel-thumbnails li:nth-of-type(5) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-    &:nth-of-type(6):checked ~ .ui-carousel-thumbnails li:nth-of-type(6) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
+    &:nth-of-type(1):checked ~ .ui-carousel-thumbnails li:nth-of-type(1) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(2):checked ~ .ui-carousel-thumbnails li:nth-of-type(2) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(3):checked ~ .ui-carousel-thumbnails li:nth-of-type(3) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(4):checked ~ .ui-carousel-thumbnails li:nth-of-type(4) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(5):checked ~ .ui-carousel-thumbnails li:nth-of-type(5) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(6):checked ~ .ui-carousel-thumbnails li:nth-of-type(6) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
   }
 }
 
@@ -150,15 +174,14 @@ section {
 
   label {
     display: block;
-    @include aspect-ratio(1,1);
-
+    @include aspect-ratio(1, 1);
 
     &:hover,
     &:focus {
       cursor: pointer;
 
       img {
-        box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25);
+        box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.25);
         transition: all 300ms ease-in-out;
       }
     }

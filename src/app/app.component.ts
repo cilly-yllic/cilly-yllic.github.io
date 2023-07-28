@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common'
+import { Component } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
 
 import { LayoutComponent } from './layout/layout.component'
 
@@ -9,8 +9,8 @@ import { LayoutComponent } from './layout/layout.component'
   standalone: true,
   imports: [CommonModule, RouterOutlet, LayoutComponent],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'portfolio';
+  title = 'portfolio'
 }

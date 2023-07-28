@@ -7,7 +7,7 @@
   width: 100%;
 }
 
-@media not all and (min-width: 840px){
+@media not all and (min-width: 840px) {
   .ui-carousel {
     width: 100%;
   }
@@ -21,7 +21,7 @@
   width: 300px;
   white-space: normal;
   background-color: #f4f4f4;
-  box-shadow: 0 0 5px rgba(0,0,0,.3);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   overflow: hidden;
   .ui-title {
@@ -29,7 +29,7 @@
   }
 }
 
-@media not all and (min-width: 568px){
+@media not all and (min-width: 568px) {
   .ui-item {
     width: 90%;
   }
@@ -47,7 +47,7 @@ p {
   font-size: 1rem;
 }
 
-@media not all and (min-width: 568px){
+@media not all and (min-width: 568px) {
   p {
     padding: 20px;
     font-size: 0.875rem;

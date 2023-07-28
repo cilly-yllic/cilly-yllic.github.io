@@ -1,20 +1,36 @@
 <section>
   <div class="ui-container">
     <div class="ui-carousel">
-      <input *ngFor="let work of works; let i = index" type="radio" name="slides" [checked]="i === 0" [id]="'slide-' + i">
+      <input
+        *ngFor="let work of works; let i = index"
+        type="radio"
+        name="slides"
+        [checked]="i === 0"
+        [id]="'slide-' + i"
+      />
       <ul class="ui-carousel-slides">
         <li class="ui-carousel-slide" *ngFor="let work of works">
           <mat-grid-list cols="4" rowHeight="1:1">
             <mat-grid-tile colspan="3" rowspan="2">
-              <a [href]="work.url" target="_blank"><img class="main-image" [src]="work.imageUrl" alt="" style="background-color: black;"></a>
+              <a [href]="work.url" target="_blank"
+                ><img class="main-image" [src]="work.imageUrl" alt="" style="background-color: black"
+              /></a>
             </mat-grid-tile>
-            <mat-grid-tile colspan="1" rowspan="1"><div *ngIf="work.userIconUrl" class="user-icon" [style.background-image]="'url(' + work.userIconUrl + ')'"></div></mat-grid-tile>
+            <mat-grid-tile colspan="1" rowspan="1"
+              ><div
+                *ngIf="work.userIconUrl"
+                class="user-icon"
+                [style.background-image]="'url(' + work.userIconUrl + ')'"
+              ></div
+            ></mat-grid-tile>
             <mat-grid-tile colspan="1" rowspan="1">{{ work.description }}</mat-grid-tile>
           </mat-grid-list>
         </li>
       </ul>
       <ul class="ui-carousel-thumbnails">
-        <li *ngFor="let work of works; let i = index"><label [for]="'slide-' + i"><img class="ui-thumbnail" [src]="work.thumbnailUrl" alt=""></label></li>
+        <li *ngFor="let work of works; let i = index">
+          <label [for]="'slide-' + i"><img class="ui-thumbnail" [src]="work.thumbnailUrl" alt="" /></label>
+        </li>
       </ul>
     </div>
   </div>

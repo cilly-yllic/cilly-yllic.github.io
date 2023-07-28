@@ -1,33 +1,33 @@
-@use "sass:math";
+@use 'sass:math';
 
 .ui-profile-outer {
   position: relative;
-  background-image: url("/assets/images/Mt-Fuji.jpg");
+  background-image: url('/assets/images/Mt-Fuji.jpg');
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
   .ui-profile-inner {
     height: 100%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     .ui-profile {
       position: absolute;
       margin: 10px;
       color: white;
       font-weight: bold;
       font-size: 2em;
-      font-family :Quicksand, sans-serif;
+      font-family: Quicksand, sans-serif;
       .ui-focus {
         color: white;
         font-weight: bold;
         font-size: 3em;
-        font-family :Quicksand, sans-serif;
+        font-family: Quicksand, sans-serif;
       }
       .ui-detail {
         color: white;
         font-weight: bold;
         font-size: 0.8em;
-        font-family :Quicksand, sans-serif;
+        font-family: Quicksand, sans-serif;
       }
     }
   }
@@ -35,14 +35,14 @@
 
 .ui-skill-outer {
   position: relative;
-  background-image: url("/assets/images/walking.JPG");
+  background-image: url('/assets/images/walking.JPG');
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
   .ui-skill-inner {
     height: 100%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     .ui-icon {
       position: absolute;
       display: block;
@@ -61,7 +61,7 @@
     .ui-skill {
       position: absolute;
       margin: 10px;
-      width: calc( 100% - 10px );
+      width: calc(100% - 10px);
       height: 100%;
       .ui-title {
         top: 10px;
@@ -69,12 +69,12 @@
         color: rgb(80, 78, 78);
         font-weight: bold;
         font-size: 2em;
-        font-family :Quicksand, sans-serif;
+        font-family: Quicksand, sans-serif;
       }
       .ui-list {
         position: absolute;
         bottom: 20px;
-        width: calc( 100% - 10px );
+        width: calc(100% - 10px);
         //width: 100% - 10px;
       }
     }
@@ -83,47 +83,47 @@
 
 .ui-work-outer {
   position: relative;
-  background-image: url("/assets/images/cute.jpg");
+  background-image: url('/assets/images/cute.jpg');
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
   .ui-work-inner {
     height: 100%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     .ui-work {
       position: absolute;
       margin: 10px;
       //width: 100%;
-      width: calc( 100% - 10px );
+      width: calc(100% - 10px);
       height: 100%;
       .ui-title {
         text-align: center;
         color: rgb(80, 78, 78);
         font-weight: bold;
         font-size: 2em;
-        font-family :Quicksand, sans-serif;
+        font-family: Quicksand, sans-serif;
       }
       .ui-list {
         position: absolute;
         bottom: 20px;
         //height: 80%;
         //width: calc( 100% - 20px );
-        width: calc( 100% - 10px );
+        width: calc(100% - 10px);
       }
     }
   }
 }
 .ui-contact-outer {
   position: relative;
-  background-image: url("/assets/images/contact.jpg");
+  background-image: url('/assets/images/contact.jpg');
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
   .ui-contact-inner {
     height: 100%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     .ui-contact {
       position: absolute;
       width: 100%;
@@ -136,7 +136,7 @@
         color: rgb(80, 78, 78);
         font-weight: bold;
         font-size: 2em;
-        font-family :Quicksand, sans-serif;
+        font-family: Quicksand, sans-serif;
       }
       .ui-list {
         position: absolute;

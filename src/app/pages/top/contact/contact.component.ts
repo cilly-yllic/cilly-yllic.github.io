@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'
+import { Component } from '@angular/core'
 
 const CONTACTS = [
   { url: 'https://www.facebook.com/A3itEdxN', logoUrl: 'assets/images/logo/facebook-color.png' },
@@ -11,7 +11,7 @@ const CONTACTS = [
   standalone: true,
   imports: [CommonModule],
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
 })
 export class ContactComponent {
   contacts = CONTACTS

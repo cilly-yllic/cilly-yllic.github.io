@@ -1,0 +1,26 @@
+<!--<app-a-header></app-a-header>-->
+<mat-drawer-container class="container" autosize>
+  <mat-drawer #drawer class="sidenav" mode="side" opened>
+    <mat-list>
+      <mat-list-item style="cursor: pointer" (click)="onClick($event, 'top')">メイン</mat-list-item>
+      <mat-list-item (click)="onClick($event, 'top', 'profile')" style="cursor: pointer">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>TOP</div>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item style="cursor: pointer" (click)="onClick($event, 'others')">その他</mat-list-item>
+      <!--      <mat-list style="margin-left:30px">-->
+      <mat-list-item (click)="onClick($event, 'others', 'photo')" style="cursor: pointer">
+        <mat-icon matListItemIcon>image</mat-icon>
+        <div matListItemTitle>趣味・ギャラリー</div>
+      </mat-list-item>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>
+<app-footer></app-footer>

@@ -1,0 +1,18 @@
+<div class="ui-carousel">
+  <div class="ui-item" *ngFor="let skill of skills">
+    <h2 class="ui-title">
+      <mat-icon *ngIf="skill.icon.value" [fontSet]="skill.icon.fontSet">{{ skill.icon.value }}</mat-icon>
+      {{ skill.skill }}
+    </h2>
+    <mat-list role="list">
+      <mat-list-item *ngFor="let item of skill.items" [matTooltip]="item.tooltip" matTooltipPosition="above" matTooltipClass="ui-tooltip">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <div matListItemTitle>{{ item.title }}</div>
+        <div matListItemLine>
+          {{ item.line.text }}
+          {{ item.line.level | level }}
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

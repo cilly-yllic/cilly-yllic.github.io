@@ -22,7 +22,7 @@ const WORKS = [
     imageUrl: 'assets/images/ogp/npm/main.png',
     thumbnailUrl: 'assets/images/ogp/npm/icon.png',
     userIconUrl: 'assets/images/ogp/npm/user-icon.jpeg',
-    description: '今は更新していませんが、正社員時代に少し投稿していました。',
+    description: '自動化や効率化できそうなアイディアが浮かんだら公開したりしています。',
   },
   {
     url: 'https://qiita.com/cilly',

@@ -1,33 +1,18 @@
 <div class="skill">
   <div class="love card-item">
-    <div class="title">得意・好き</div>
+    <div class="title">{{ skills.likes.title }}</div>
     <div class="list-item">
-      <div class="item">PHP</div>
-      <div class="item">Laravel</div>
-      <div class="division"></div>
-      <div class="item">JavaScript</div>
-      <div class="item">TypeScript</div>
-      <div class="item">Angular / AngularJs</div>
-      <div class="item">Vue.js</div>
-      <div class="item">Angular Material</div>
-      <div class="division"></div>
-      <div class="item">NoSQL (firestore)</div>
-      <div class="item">Firebase</div>
+      <ng-container *ngFor="let data of skills.likes.list">
+        <div [class]="data.type">{{ data.value }}</div>
+      </ng-container>
     </div>
   </div>
   <div class="experienced card-item">
-    <div class="title">経験あり</div>
+    <div class="title">{{ skills.experienced.title }}</div>
     <div class="list-item">
-      <div class="item">CSS</div>
-      <div class="item">Tailwind</div>
-      <div class="item">Vuetify</div>
-      <div class="item">Nuxt.js</div>
-      <div class="division"></div>
-      <div class="item">MySQL</div>
-      <div class="item">PostgreSQL</div>
-      <div class="item">GCP</div>
-      <div class="item">Docker</div>
-      <div class="item">Vagrant</div>
+      <ng-container *ngFor="let data of skills.experienced.list">
+        <div [class]="data.type">{{ data.value }}</div>
+      </ng-container>
     </div>
   </div>
 </div>

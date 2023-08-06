@@ -1,39 +1,14 @@
-<div class="item">
-  <a href="https://mooodone.com/">
-    <div class="img" style="background-image:url(assets/images/ogp/mooodone/main.png)"></div>
-    <div class="text">
-      <div class="url">https://mooodone.com/</div>
-      <div>代表を勤めている合同会社です。<br>（まだ独りです）</div>
-    </div>
-  </a>
-</div>
-
-<h3>OSS</h3>
-<div class="item">
-  <a href="https://github.com/cilly-yllic">
-    <div class="img" style="background-image:url(assets/images/ogp/github/icon.png)"></div>
-    <div class="text">
-      <div class="url">https://github.com/cilly-yllic</div>
-    </div>
-  </a>
-</div>
-<div class="item">
-  <a href="https://www.npmjs.com/~cilly">
-    <div class="img" style="background-image:url(assets/images/ogp/npm/icon.png)"></div>
-    <div class="text">
-      <div class="url">https://www.npmjs.com/~cilly</div>
-      <div>自動化や効率化できそうなアイディアを公開しています。</div>
-    </div>
-  </a>
-</div>
-
-<h3>NOTE</h3>
-<div class="item">
-  <a href="https://qiita.com/cilly">
-    <div class="img" style="background-image:url(assets/images/ogp/qiita/icon.png)"></div>
-    <div class="text">
-      <div class="url">https://qiita.com/cilly</div>
-      <div>正社員時代に少し投稿していました。</div>
-    </div>
-  </a>
-</div>
+<ng-container *ngFor="let work of works">
+  <h3 *ngIf="work.title">{{ work.title }}</h3>
+  <div class="item" *ngFor="let item of work.items">
+    <a [href]="item.href" target="_blank">
+      <div class="img" [style.background-image]="'url(' + item.backgroundImageUrl + ')'"></div>
+      <div class="text">
+        <ng-container *ngFor="let text of item.text">
+          <div *ngIf="text.type === 'url'" class="url">{{ text.value }}</div>
+          <div *ngIf="text.type === 'html'" [innerHTML]="text.value"></div>
+        </ng-container>
+      </div>
+    </a>
+  </div>
+</ng-container>

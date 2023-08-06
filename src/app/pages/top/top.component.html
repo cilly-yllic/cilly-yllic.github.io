@@ -1,46 +1,37 @@
-<div class="section ui-profile-outer">
-  <div class="ui-profile-inner">
-    <div class="ui-profile">
-      Hi, I am Yoshihiro Okuda
-      <div class="ui-focus">
-        Who Loves
-        <p>Angular & Firebase</p>
-      </div>
-      <div class="ui-detail">
-        I specialize as a frontend engineer in web service development, and I also handle backend and infrastructure
-        development as needed. Additionally, I am currently running a limited liability company.
-      </div>
+<div class="l-top">
+  <div class="inner">
+    <div [style.background-image]="'url(assets/images/icon.jpg)'" class="ui-profile-image"></div>
+    <div class="message">
+      Hi, I am Yoshihiro Okuda<br>
+      <strong>
+        Who Loves<br>
+        Angular & Firebase.
+      </strong>
+    </div>
+    <div class="detail">
+      I specialize as a frontend engineer in web service development, and I also handle backend and infrastructure
+      development as needed. <br>Additionally, I am currently running a limited liability company.
     </div>
   </div>
 </div>
-<div class="section ui-skill-outer">
-  <div class="ui-skill-inner">
-    <div [style.background-image]="'url(assets/images/icon.jpg)'" class="ui-icon"></div>
-    <div class="ui-skill">
-      <div class="ui-title">スキル</div>
-      <div class="ui-list">
-        <app-skills></app-skills>
-      </div>
-    </div>
+
+<div class="l-skill">
+  <div class="inner">
+    <h2>My Skills</h2>
+    <app-skills></app-skills>
   </div>
 </div>
-<div class="section ui-work-outer">
-  <div class="ui-work-inner">
-    <div class="ui-work">
-      <div class="ui-title">活動</div>
-      <div class="ui-list">
-        <app-work></app-work>
-      </div>
-    </div>
+
+<div class="l-work">
+  <div class="inner">
+    <h2>My Works</h2>
+    <app-work></app-work>
   </div>
 </div>
-<div class="section ui-contact-outer">
-  <div class="ui-contact-inner">
-    <div class="ui-contact">
-      <div class="ui-title">CONTACT</div>
-      <div class="ui-list">
-        <app-contact></app-contact>
-      </div>
-    </div>
+
+<div class="l-contact">
+  <div class="inner">
+    <h2>CONTACT</h2>
+    <app-contact></app-contact>
   </div>
 </div>

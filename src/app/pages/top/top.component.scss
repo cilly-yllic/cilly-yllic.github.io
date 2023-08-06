@@ -1,149 +1,69 @@
 @use 'sass:math';
 
-.ui-profile-outer {
-  position: relative;
+//
+.ui-profile-image {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #ececec;
+  border-radius: 999px;
+  border: 1px solid #fff;
+}
+h2 {
+  font-family: 'Bad Script', cursive, sans-serif;
+  font-size: 2rem;
+}
+
+.l-top,
+.l-skill,
+.l-work,
+.l-contact {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  .inner {
+    padding: 4rem 2rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+}
+
+.l-top {
   background-image: url('/assets/images/Mt-Fuji.jpg');
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  .ui-profile-inner {
-    height: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    .ui-profile {
-      position: absolute;
-      margin: 10px;
-      color: white;
-      font-weight: bold;
-      font-size: 2em;
-      font-family: Quicksand, sans-serif;
-      .ui-focus {
-        color: white;
-        font-weight: bold;
-        font-size: 3em;
-        font-family: Quicksand, sans-serif;
+  .inner {
+    .ui-profile-image {
+      margin: 0 auto 2rem;
+    }
+    .message {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      font-family: 'Bad Script', cursive, sans-serif;
+      strong {
+        display: block;
+        padding-top: 1rem;
+        font-size: 2rem;
+        line-height: 1.7;
       }
-      .ui-detail {
-        color: white;
-        font-weight: bold;
-        font-size: 0.8em;
-        font-family: Quicksand, sans-serif;
-      }
+    }
+    .detail {
+      font-size: 1rem;
+      line-height: 1.7;
+      font-family: 'Quicksand', sans-serif;
     }
   }
 }
 
-.ui-skill-outer {
-  position: relative;
+.l-skill {
   background-image: url('/assets/images/walking.JPG');
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  .ui-skill-inner {
-    height: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    .ui-icon {
-      position: absolute;
-      display: block;
-      min-width: 48px;
-      width: 180px;
-      height: 180px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-color: #ececec;
-      border-radius: 999px;
-      border: 1px solid #fff;
-      right: 10%;
-      top: 10%;
-    }
-    .ui-skill {
-      position: absolute;
-      margin: 10px;
-      width: calc(100% - 10px);
-      height: 100%;
-      .ui-title {
-        top: 10px;
-        left: 10px;
-        color: rgb(80, 78, 78);
-        font-weight: bold;
-        font-size: 2em;
-        font-family: Quicksand, sans-serif;
-      }
-      .ui-list {
-        position: absolute;
-        bottom: 20px;
-        width: calc(100% - 10px);
-        //width: 100% - 10px;
-      }
-    }
-  }
 }
 
-.ui-work-outer {
-  position: relative;
+.l-work {
   background-image: url('/assets/images/cute.jpg');
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  .ui-work-inner {
-    height: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    .ui-work {
-      position: absolute;
-      margin: 10px;
-      //width: 100%;
-      width: calc(100% - 10px);
-      height: 100%;
-      .ui-title {
-        text-align: center;
-        color: rgb(80, 78, 78);
-        font-weight: bold;
-        font-size: 2em;
-        font-family: Quicksand, sans-serif;
-      }
-      .ui-list {
-        position: absolute;
-        bottom: 20px;
-        //height: 80%;
-        //width: calc( 100% - 20px );
-        width: calc(100% - 10px);
-      }
-    }
-  }
 }
-.ui-contact-outer {
-  position: relative;
+
+.l-contact {
   background-image: url('/assets/images/contact.jpg');
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  .ui-contact-inner {
-    height: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    .ui-contact {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      .ui-title {
-        position: absolute;
-        top: 25%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: rgb(80, 78, 78);
-        font-weight: bold;
-        font-size: 2em;
-        font-family: Quicksand, sans-serif;
-      }
-      .ui-list {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-  }
 }

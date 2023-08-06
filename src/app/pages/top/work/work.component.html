@@ -1,37 +1,39 @@
-<section>
-  <div class="ui-container">
-    <div class="ui-carousel">
-      <input
-        *ngFor="let work of works; let i = index"
-        type="radio"
-        name="slides"
-        [checked]="i === 0"
-        [id]="'slide-' + i"
-      />
-      <ul class="ui-carousel-slides">
-        <li class="ui-carousel-slide" *ngFor="let work of works">
-          <mat-grid-list cols="4" rowHeight="1:1">
-            <mat-grid-tile colspan="3" rowspan="2">
-              <a [href]="work.url" target="_blank"
-                ><img class="main-image" [src]="work.imageUrl" alt="" style="background-color: black"
-              /></a>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="1" rowspan="1"
-              ><div
-                *ngIf="work.userIconUrl"
-                class="user-icon"
-                [style.background-image]="'url(' + work.userIconUrl + ')'"
-              ></div
-            ></mat-grid-tile>
-            <mat-grid-tile colspan="1" rowspan="1">{{ work.description }}</mat-grid-tile>
-          </mat-grid-list>
-        </li>
-      </ul>
-      <ul class="ui-carousel-thumbnails">
-        <li *ngFor="let work of works; let i = index">
-          <label [for]="'slide-' + i"><img class="ui-thumbnail" [src]="work.thumbnailUrl" alt="" /></label>
-        </li>
-      </ul>
+<div class="item">
+  <a href="https://mooodone.com/">
+    <div class="img" style="background-image:url(assets/images/ogp/mooodone/main.png)"></div>
+    <div class="text">
+      <div class="url">https://mooodone.com/</div>
+      <div>代表を勤めている合同会社です。<br>（まだ独りです）</div>
     </div>
-  </div>
-</section>
+  </a>
+</div>
+
+<h3>OSS</h3>
+<div class="item">
+  <a href="https://github.com/cilly-yllic">
+    <div class="img" style="background-image:url(assets/images/ogp/github/icon.png)"></div>
+    <div class="text">
+      <div class="url">https://github.com/cilly-yllic</div>
+    </div>
+  </a>
+</div>
+<div class="item">
+  <a href="https://www.npmjs.com/~cilly">
+    <div class="img" style="background-image:url(assets/images/ogp/npm/icon.png)"></div>
+    <div class="text">
+      <div class="url">https://www.npmjs.com/~cilly</div>
+      <div>自動化や効率化できそうなアイディアを公開しています。</div>
+    </div>
+  </a>
+</div>
+
+<h3>NOTE</h3>
+<div class="item">
+  <a href="https://qiita.com/cilly">
+    <div class="img" style="background-image:url(assets/images/ogp/qiita/icon.png)"></div>
+    <div class="text">
+      <div class="url">https://qiita.com/cilly</div>
+      <div>正社員時代に少し投稿していました。</div>
+    </div>
+  </a>
+</div>

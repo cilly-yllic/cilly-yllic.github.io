@@ -40,9 +40,10 @@ $portfolio-theme: mat.define-light-theme(
 
 html,
 body {
-  height: 100%;
-}
-body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', Meiryo, メイリオ, '游ゴシック Medium',
+    'Yu Gothic Medium', '游ゴシック体', 'Yu Gothic', YuGothic, 'MS PGothic', Osaka, arial, sans-serif;
 }

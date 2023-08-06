@@ -1,59 +1,38 @@
-.ui-carousel {
-  scroll-snap-type: x mandatory;
-  white-space: nowrap;
-  overflow-x: auto;
-  margin: 0 auto;
-  padding: 30px 0;
-  width: 100%;
-}
-
-@media not all and (min-width: 840px) {
-  .ui-carousel {
-    width: 100%;
+.skill {
+  display: flex;
+  justify-content: center;
+  .card-item {
+    width: 200px;
+    margin: 0 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    color: #000;
+    border-radius: 14px;
+    .title {
+      font-size: 1.2rem;
+      padding-bottom: 1rem;
+    }
+    .item {
+      display: inline-block;
+      background-color: #eee;
+      margin: 0 8px 8px 0;
+      padding: 4px 10px;
+      border: 1px solid #ccc;
+      border-radius: 99px;
+      font-family: 'Quicksand', sans-serif;
+    }
+    .division {
+      display: block;
+      width: 100%;
+      padding: 6px;
+    }
   }
-}
-
-.ui-item {
-  scroll-snap-align: center;
-  display: inline-block;
-  margin: 0 20px;
-  //width: 40%;
-  width: 300px;
-  white-space: normal;
-  background-color: #f4f4f4;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
-  overflow: hidden;
-  .ui-title {
-    text-align: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: initial;
+    .card-item {
+      width: 80%;
+      margin-bottom: 2rem;
+    }
   }
-}
-
-@media not all and (min-width: 568px) {
-  .ui-item {
-    width: 90%;
-  }
-}
-
-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-p {
-  margin: 0;
-  padding: 30px;
-  font-size: 1rem;
-}
-
-@media not all and (min-width: 568px) {
-  p {
-    padding: 20px;
-    font-size: 0.875rem;
-  }
-}
-
-.ui-icon-fill {
-  color: #3f51b5;
 }

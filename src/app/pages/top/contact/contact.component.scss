@@ -1,8 +1,14 @@
-.ui-list {
+.list {
   display: flex;
-  //flex-direction: column;
-}
-
-img {
-  max-width: 100px;
+  justify-content: center;
+  a {
+    display: block;
+    margin: 0 1rem;
+    img {
+      width: 68px;
+      height: 68px;
+      background-color: #fff;
+      border-radius: 99px;
+    }
+  }
 }

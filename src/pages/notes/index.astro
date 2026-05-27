@@ -1,0 +1,126 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { CATEGORIES, type CategorySlug } from '../../content.config';
+
+const allNotes = await getCollection('notes', ({ data }) => !data.draft);
+const sorted = allNotes.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+
+function entryHref(id: string) {
+  return `/notes/${id}/`;
+}
+
+function countByCategory(slug: CategorySlug) {
+  return allNotes.filter((n) => n.data.category === slug).length;
+}
+---
+
+<BaseLayout
+  title="Architecture Notes · cilly-yllic"
+  description="技術思想・設計思想に関する記事。Firebase / GCP、OpenSearch、Frontend Architecture、AI Development、Engineering Philosophy。"
+>
+  <nav class="back">
+    <a href="/">← Home</a>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Architecture Notes</p>
+    <h1>Notes</h1>
+    <p class="lead">
+      設計判断、検証結果、技術思想の発信。日々の実装からあがってくる
+      具体的な問題と、その背景にある抽象的な議論を残す。
+    </p>
+  </header>
+
+  <section class="categories">
+    <h2>Categories</h2>
+    <ul class="category-list">
+      {
+        CATEGORIES.map((cat) => (
+          <li>
+            <a href={`/notes/${cat.slug}/`}>{cat.title}</a>
+            <span class="count">{countByCategory(cat.slug)}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="articles">
+    <h2>All Articles</h2>
+    <div class="card-list">
+      {
+        sorted.map((note) => (
+          <ArticleCard
+            title={note.data.title}
+            description={note.data.description}
+            category={note.data.category}
+            publishedAt={note.data.publishedAt}
+            href={entryHref(note.id)}
+          />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .back {
+    margin-bottom: var(--space-8);
+    font-size: 0.875rem;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-16);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .categories {
+    margin-bottom: var(--space-16);
+  }
+
+  .category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .category-list li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .count {
+    color: var(--fg-subtle);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

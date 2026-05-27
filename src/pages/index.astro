@@ -35,7 +35,12 @@ const skillCategories = [
   },
 ];
 
-const links = [
+const sections = [
+  { label: 'Projects', href: '/projects/' },
+  { label: 'Architecture Notes', href: '/notes/' },
+];
+
+const externalLinks = [
   { label: 'GitHub', href: 'https://github.com/cilly-yllic', external: true },
   { label: 'X', href: '#', external: true },
   { label: 'Resume', href: '#', external: true },
@@ -49,5 +54,6 @@ const links = [
     tagline="Full-cycle web engineer focused on scalable architecture, AI-integrated systems, and product-oriented development."
   />
   <Skills categories={skillCategories} />
-  <ExternalLinks links={links} />
+  <ExternalLinks title="Sections" links={sections} />
+  <ExternalLinks title="Links" links={externalLinks} />
 </BaseLayout>

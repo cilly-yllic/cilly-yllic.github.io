@@ -28,10 +28,6 @@ const updated = note.data.updatedAt?.toISOString().slice(0, 10);
   title={`${note.data.title} · Architecture Notes`}
   description={note.data.description}
 >
-  <nav class="back">
-    <a href={`/notes/${note.data.category}/`}>← {categoryTitle}</a>
-  </nav>
-
   <article class="article">
     <header class="article-header">
       <p class="eyebrow">{categoryTitle}</p>
@@ -50,11 +46,6 @@ const updated = note.data.updatedAt?.toISOString().slice(0, 10);
 </BaseLayout>
 
 <style>
-  .back {
-    margin-bottom: var(--space-8);
-    font-size: 0.875rem;
-  }
-
   .article-header {
     margin-bottom: var(--space-12);
     padding-bottom: var(--space-8);
@@ -171,15 +162,24 @@ const updated = note.data.updatedAt?.toISOString().slice(0, 10);
     font-style: normal;
   }
 
-  /* Shiki dual theme: switch by prefers-color-scheme */
+  /* Shiki dual theme: follow OS by default, override by data-theme */
   @media (prefers-color-scheme: dark) {
-    .prose .astro-code,
-    .prose .astro-code span {
+    :root:not([data-theme='light']) .prose .astro-code,
+    :root:not([data-theme='light']) .prose .astro-code span {
       color: var(--shiki-dark) !important;
       background-color: var(--shiki-dark-bg) !important;
       font-style: var(--shiki-dark-font-style) !important;
       font-weight: var(--shiki-dark-font-weight) !important;
       text-decoration: var(--shiki-dark-text-decoration) !important;
     }
+  }
+
+  :root[data-theme='dark'] .prose .astro-code,
+  :root[data-theme='dark'] .prose .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
   }
 </style>

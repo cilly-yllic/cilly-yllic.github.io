@@ -1,0 +1,62 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="inner">
+    <p class="copyright">© {year} cilly-yllic</p>
+    <ul class="links">
+      <li>
+        <a href="https://github.com/cilly-yllic/cilly-yllic.github.io" target="_blank" rel="noopener noreferrer">
+          Source
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/cilly-yllic" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-16);
+  }
+
+  .inner {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .copyright {
+    margin: 0;
+    color: var(--fg-subtle);
+    font-size: 0.8125rem;
+  }
+
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .links a {
+    font-size: 0.8125rem;
+    color: var(--fg-subtle);
+  }
+
+  .links a:hover {
+    color: var(--fg);
+  }
+</style>

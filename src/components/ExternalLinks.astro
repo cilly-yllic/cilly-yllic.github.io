@@ -6,14 +6,15 @@ interface Link {
 }
 
 interface Props {
+  title?: string;
   links: Link[];
 }
 
-const { links } = Astro.props;
+const { title = 'Links', links } = Astro.props;
 ---
 
 <section class="external-links">
-  <h2>Links</h2>
+  <h2>{title}</h2>
   <ul>
     {
       links.map((link) => (

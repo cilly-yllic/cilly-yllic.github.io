@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+
+const interests = [
+  'Distributed Systems',
+  'Event-driven Architecture',
+  'AI-assisted Development',
+  'Product Architecture',
+  'Realtime Systems',
+];
+
+const values = [
+  {
+    name: 'Maintainability',
+    detail: '6 ヶ月後に他人が読んで意味の取れるコードと、6 ヶ月後に自分が読んで意味の取れる設計。',
+  },
+  {
+    name: 'Scalability',
+    detail: '今 10 倍にしたら何が壊れるかを、設計の段階で言えること。',
+  },
+  {
+    name: 'Readability',
+    detail: '優先順位として速度 < 正確さ < 読みやすさ。最後が最も長く効く。',
+  },
+  {
+    name: 'Explicit Architecture',
+    detail: 'システムの境界・責務・データの流れを言葉と図にできること。暗黙の前提を最小化する。',
+  },
+  {
+    name: 'Operational Simplicity',
+    detail: '運用フェーズで複雑なものは設計フェーズに戻す。複雑さは「移動」できるが「消滅」させづらい。',
+  },
+];
+---
+
+<BaseLayout
+  title="About · cilly-yllic"
+  description="エンジニアとしての関心領域、設計上重視していること。"
+>
+  <nav class="back">
+    <a href="/">← Home</a>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">About</p>
+    <h1>About me</h1>
+    <p class="lead">
+      フロント / バック / インフラ / アーキテクチャを跨いで動く Web エンジニア。
+      個人プロダクトと業務委託の両方で、システムの境界設計と AI 統合を中心に
+      手を動かしている。
+    </p>
+  </header>
+
+  <Section title="興味領域">
+    <ul class="bullet-list">
+      {interests.map((item) => <li>{item}</li>)}
+    </ul>
+  </Section>
+
+  <Section title="重視していること">
+    <dl class="values">
+      {
+        values.map((v) => (
+          <div class="value-row">
+            <dt>{v.name}</dt>
+            <dd>{v.detail}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    margin-bottom: var(--space-8);
+    font-size: 0.875rem;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-16);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+  }
+
+  .bullet-list li {
+    font-size: 0.9375rem;
+    color: var(--fg);
+  }
+
+  .values {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .value-row {
+    border-left: 2px solid var(--border);
+    padding-left: var(--space-4);
+  }
+
+  dt {
+    color: var(--fg);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-2);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StatusCard from '../components/StatusCard.astro';
+
+const items = [
+  {
+    title: 'Utility Libraries',
+    description:
+      '日々の TypeScript プロジェクトで再利用している小さなユーティリティ群 (date / collection / typed helper)。汎用化と公開準備中。',
+    status: 'Planned' as const,
+  },
+  {
+    title: 'ESLint Config',
+    description:
+      'Vue / Nuxt / Astro を横断して使える ESLint 設定プリセット。複数プロジェクトのコーディング規約を一本化するためのもの。',
+    status: 'Planned' as const,
+  },
+  {
+    title: 'Firebase Wrappers',
+    description:
+      'Firestore / Cloud Tasks / Auth を扱う際の薄いラッパー。型安全な query builder と reconciliation テンプレートを含む。',
+    status: 'Planned' as const,
+  },
+  {
+    title: 'Shared Internal Tooling',
+    description:
+      '社内向けに作っていた CLI / scaffolding / dev workflow tooling から、抽象度の高いものを切り出して公開予定。',
+    status: 'Planned' as const,
+  },
+];
+---
+
+<BaseLayout
+  title="OSS · cilly-yllic"
+  description="公開しているライブラリ・ツール。"
+>
+  <nav class="back">
+    <a href="/">← Home</a>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Open Source</p>
+    <h1>OSS</h1>
+    <p class="lead">
+      実装の中で「これは他のプロジェクトでも欲しい」と思ったものから、
+      抽象度を上げて公開しているライブラリ・ツール群。
+    </p>
+  </header>
+
+  <div class="card-list">
+    {
+      items.map((item) => (
+        <StatusCard
+          title={item.title}
+          description={item.description}
+          status={item.status}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .back {
+    margin-bottom: var(--space-8);
+    font-size: 0.875rem;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+</style>

@@ -35,15 +35,6 @@ const skillCategories = [
   },
 ];
 
-const sections = [
-  { label: 'Projects', href: '/projects/' },
-  { label: 'Architecture Notes', href: '/notes/' },
-  { label: 'Playground', href: '/playground/' },
-  { label: 'OSS', href: '/oss/' },
-  { label: 'About', href: '/about/' },
-  { label: 'Contact', href: '/contact/' },
-];
-
 const externalLinks = [
   { label: 'GitHub', href: 'https://github.com/cilly-yllic', external: true },
   { label: 'X', href: '#', external: true },
@@ -57,6 +48,5 @@ const externalLinks = [
     tagline="Full-cycle web engineer focused on scalable architecture, AI-integrated systems, and product-oriented development."
   />
   <Skills categories={skillCategories} />
-  <ExternalLinks title="Sections" links={sections} />
-  <ExternalLinks title="Links" links={externalLinks} />
+  <ExternalLinks title="Elsewhere" links={externalLinks} />
 </BaseLayout>

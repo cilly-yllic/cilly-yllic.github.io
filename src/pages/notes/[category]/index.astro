@@ -32,10 +32,6 @@ const sorted = notes.sort(
   title={`${categoryTitle} · Architecture Notes`}
   description={`${categoryTitle} カテゴリの記事一覧。`}
 >
-  <nav class="back">
-    <a href="/notes/">← Notes</a>
-  </nav>
-
   <header class="page-header">
     <p class="eyebrow">Architecture Notes</p>
     <h1>{categoryTitle}</h1>
@@ -62,11 +58,6 @@ const sorted = notes.sort(
 </BaseLayout>
 
 <style>
-  .back {
-    margin-bottom: var(--space-8);
-    font-size: 0.875rem;
-  }
-
   .page-header {
     margin-bottom: var(--space-12);
   }

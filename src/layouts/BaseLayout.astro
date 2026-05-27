@@ -7,11 +7,13 @@ import SiteFooter from '../components/SiteFooter.astro';
 interface Props {
   title?: string;
   description?: string;
+  ogType?: 'website' | 'article';
 }
 
 const {
   title = 'cilly-yllic',
   description = 'Full-cycle web engineer focused on scalable architecture, AI-integrated systems, and product-oriented development.',
+  ogType = 'website',
 } = Astro.props;
 
 const ogImage = new URL('/og-image.png', Astro.site).toString();
@@ -33,7 +35,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <meta property="og:type" content="website" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="cilly-yllic — Architecture Notes"
+      href="/notes/rss.xml"
+    />
+
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -55,6 +64,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
         }
       })();
     </script>
+
+    <slot name="head" />
   </head>
   <body>
     <SiteHeader />

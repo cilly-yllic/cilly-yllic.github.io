@@ -22,12 +22,42 @@ const categoryTitle =
   CATEGORIES.find((c) => c.slug === note.data.category)?.title ?? note.data.category;
 const date = note.data.publishedAt.toISOString().slice(0, 10);
 const updated = note.data.updatedAt?.toISOString().slice(0, 10);
+
+const siteUrl = Astro.site!;
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImage = new URL('/og-image.png', siteUrl).toString();
+
+const ldJson = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: note.data.title,
+  description: note.data.description,
+  datePublished: note.data.publishedAt.toISOString(),
+  ...(note.data.updatedAt && { dateModified: note.data.updatedAt.toISOString() }),
+  author: {
+    '@type': 'Person',
+    name: 'cilly-yllic',
+    url: siteUrl.toString(),
+  },
+  image: ogImage,
+  url: canonical,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonical,
+  },
+  articleSection: categoryTitle,
+};
 ---
 
 <BaseLayout
   title={`${note.data.title} · Architecture Notes`}
   description={note.data.description}
+  ogType="article"
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(ldJson)} is:inline />
+  </Fragment>
+
   <article class="article">
     <header class="article-header">
       <p class="eyebrow">{categoryTitle}</p>

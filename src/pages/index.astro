@@ -1,38 +1,53 @@
 ---
-const title = 'cilly-yllic';
-const description = 'Full-cycle web engineer focused on scalable architecture, AI-integrated systems, and product-oriented development.';
-const ogImage = new URL('/og-image.png', Astro.site).toString();
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Skills from '../components/Skills.astro';
+import ExternalLinks from '../components/ExternalLinks.astro';
+
+const skillCategories = [
+  {
+    name: 'Frontend',
+    items: ['TypeScript', 'Next.js', 'Nuxt.js', 'Vue.js'],
+  },
+  {
+    name: 'Backend',
+    items: ['TypeScript', 'NestJS', 'Node.js'],
+  },
+  {
+    name: 'Infrastructure',
+    items: ['Google Cloud', 'Firebase', 'GitHub Actions'],
+  },
+  {
+    name: 'Architecture',
+    items: ['Nx', 'Turborepo', 'Event-driven', 'Multi-tenant'],
+  },
+  {
+    name: 'AI Integration',
+    items: ['LLM-assisted Workflows', 'AI Coding Pipelines'],
+  },
+  {
+    name: 'Realtime Systems',
+    items: ['Firestore', 'Cloud Tasks', 'Reconciliation'],
+  },
+  {
+    name: 'Search / Data',
+    items: ['OpenSearch', 'MySQL', 'Firestore'],
+  },
+];
+
+const links = [
+  { label: 'GitHub', href: 'https://github.com/cilly-yllic', external: true },
+  { label: 'X', href: '#', external: true },
+  { label: 'Resume', href: '#', external: true },
+  { label: 'Contact', href: 'mailto:yoshihiro.okuda@mooodone.com' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<link rel="canonical" href={canonical} />
-
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:url" content={canonical} />
-		<meta property="og:image" content={ogImage} />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
-
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content={ogImage} />
-	</head>
-	<body>
-		<h1>{title}</h1>
-	</body>
-</html>
+<BaseLayout>
+  <Hero
+    name="cilly-yllic"
+    tagline="Full-cycle web engineer focused on scalable architecture, AI-integrated systems, and product-oriented development."
+  />
+  <Skills categories={skillCategories} />
+  <ExternalLinks links={links} />
+</BaseLayout>

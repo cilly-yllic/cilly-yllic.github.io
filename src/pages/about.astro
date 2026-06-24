@@ -3,34 +3,73 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/Section.astro';
 
 const interests = [
+  
   'Distributed Systems',
+  
   'Event-driven Architecture',
-  'AI-assisted Development',
-  'Product Architecture',
+  
   'Realtime Systems',
+  
+  'Search Infrastructure',
+  
+  'AI-assisted Development',
+  
+  'Product Architecture',
+
 ];
 
 const values = [
+  
   {
+    
     name: 'Maintainability',
-    detail: '6 ヶ月後に他人が読んで意味の取れるコードと、6 ヶ月後に自分が読んで意味の取れる設計。',
+    
+    detail:
+      
+      '6 ヶ月後に他人が読んで理解できること、自分が読み返して意図を説明できることを重視する。',
+    
   },
+  
   {
+    
     name: 'Scalability',
-    detail: '今 10 倍にしたら何が壊れるかを、設計の段階で言えること。',
+    
+    detail:
+      
+      'ユーザー数やデータ量が増えた時に、どこがボトルネックになるかを事前に把握できる設計を重視する。',
+    
   },
+  
   {
+    
     name: 'Readability',
-    detail: '優先順位として速度 < 正確さ < 読みやすさ。最後が最も長く効く。',
+    
+    detail:
+      
+      '短期的な実装速度より、長期運用時の可読性と変更容易性を優先する。',
+    
   },
+  
   {
+    
     name: 'Explicit Architecture',
-    detail: 'システムの境界・責務・データの流れを言葉と図にできること。暗黙の前提を最小化する。',
+    
+    detail:
+      
+      '責務・データ境界・同期方向・更新責任を明確にし、暗黙知に依存しない設計を重視する。',
+    
   },
+  
   {
+    
     name: 'Operational Simplicity',
-    detail: '運用フェーズで複雑なものは設計フェーズに戻す。複雑さは「移動」できるが「消滅」させづらい。',
+    
+    detail:
+      
+      '運用で複雑になるものは、設計段階で再検討する。複雑さは後工程ほどコストになる。',
+    
   },
+
 ];
 ---
 
@@ -42,9 +81,8 @@ const values = [
     <p class="eyebrow">About</p>
     <h1>About me</h1>
     <p class="lead">
-      フロント / バック / インフラ / アーキテクチャを跨いで動く Web エンジニア。
-      個人プロダクトと業務委託の両方で、システムの境界設計と AI 統合を中心に
-      手を動かしている。
+        TypeScript を中心に、フロントエンド・バックエンド・データ同期設計まで横断して開発している Web エンジニア。
+        0→1 開発や運用改善を含め、リアルタイム性・整合性・保守性を意識したシステム設計を得意としている。
     </p>
   </header>
 

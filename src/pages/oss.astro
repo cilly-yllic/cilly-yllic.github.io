@@ -2,30 +2,33 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StatusCard from '../components/StatusCard.astro';
 
-const items = [
+interface OssItem {
+  title: string;
+  description: string;
+  status: 'Available' | 'Coming Soon' | 'Planned' | 'Archived';
+  href?: string;
+}
+
+const items: OssItem[] = [
   {
-    title: 'Utility Libraries',
+    title: '.llm',
     description:
-      '日々の TypeScript プロジェクトで再利用している小さなユーティリティ群 (date / collection / typed helper)。汎用化と公開準備中。',
-    status: 'Planned' as const,
+      'AI コーディングエージェント向けの設定・プロンプト・ワークフローを共有するためのリポジトリ。',
+    status: 'Available',
+    href: 'https://github.com/cilly-yllic/.llm',
   },
   {
-    title: 'ESLint Config',
+    title: 'terraform-google-platform',
     description:
-      'Vue / Nuxt / Astro を横断して使える ESLint 設定プリセット。複数プロジェクトのコーディング規約を一本化するためのもの。',
-    status: 'Planned' as const,
+      'GCP / Firebase のプロジェクト基盤を構成駆動でプロビジョニングする Terraform モジュール。',
+    status: 'Available',
+    href: 'https://github.com/cilly-yllic/terraform-google-platform',
   },
   {
-    title: 'Firebase Wrappers',
-    description:
-      'Firestore / Cloud Tasks / Auth を扱う際の薄いラッパー。型安全な query builder と reconciliation テンプレートを含む。',
-    status: 'Planned' as const,
-  },
-  {
-    title: 'Shared Internal Tooling',
-    description:
-      '社内向けに作っていた CLI / scaffolding / dev workflow tooling から、抽象度の高いものを切り出して公開予定。',
-    status: 'Planned' as const,
+    title: 'npm (@cilly)',
+    description: '自動化や効率化できそうなアイディアを公開しています。',
+    status: 'Available',
+    href: 'https://www.npmjs.com/~cilly',
   },
 ];
 ---
@@ -50,6 +53,7 @@ const items = [
           title={item.title}
           description={item.description}
           status={item.status}
+          href={item.href}
         />
       ))
     }

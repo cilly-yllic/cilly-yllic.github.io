@@ -10,12 +10,24 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "lint": "oxlint",
+    "format": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx,js,jsx,mjs,cjs}' '*.{mjs,cjs,ts}'",
+    "format:check": "oxfmt --check --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx,js,jsx,mjs,cjs}' '*.{mjs,cjs,ts}'",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.3.8",
     "mermaid": "^11.15.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "lefthook": "^2.1.9",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
+    "typescript": "^6.0.3"
   }
 }

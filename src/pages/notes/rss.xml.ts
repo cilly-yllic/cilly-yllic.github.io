@@ -4,9 +4,7 @@ import { getCollection } from 'astro:content';
 
 export async function GET(context: APIContext) {
   const notes = await getCollection('notes', ({ data }) => !data.draft);
-  const sorted = notes.sort(
-    (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
-  );
+  const sorted = notes.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 
   return rss({
     title: 'cilly-yllic — Architecture Notes',

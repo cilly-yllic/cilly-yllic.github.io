@@ -1,13 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-export const CATEGORIES = [
-  { slug: 'firebase-gcp', title: 'Firebase / GCP' },
-  { slug: 'search-opensearch', title: 'Search / OpenSearch' },
-  { slug: 'frontend-architecture', title: 'Frontend Architecture' },
-  { slug: 'ai-development', title: 'AI Development' },
-  { slug: 'engineering-philosophy', title: 'Engineering Philosophy' },
-] as const;
+export const CATEGORIES = [{ slug: 'firebase-gcp', title: 'Firebase / GCP' }] as const;
 
 export type CategorySlug = (typeof CATEGORIES)[number]['slug'];
 

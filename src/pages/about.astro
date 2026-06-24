@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+
+const interests = [
+  
+  'Distributed Systems',
+  
+  'Event-driven Architecture',
+  
+  'Realtime Systems',
+  
+  'Search Infrastructure',
+  
+  'AI-assisted Development',
+  
+  'Product Architecture',
+
+];
+
+const values = [
+  
+  {
+    
+    name: 'Maintainability',
+    
+    detail:
+      
+      '6 ヶ月後に他人が読んで理解できること、自分が読み返して意図を説明できることを重視する。',
+    
+  },
+  
+  {
+    
+    name: 'Scalability',
+    
+    detail:
+      
+      'ユーザー数やデータ量が増えた時に、どこがボトルネックになるかを事前に把握できる設計を重視する。',
+    
+  },
+  
+  {
+    
+    name: 'Readability',
+    
+    detail:
+      
+      '短期的な実装速度より、長期運用時の可読性と変更容易性を優先する。',
+    
+  },
+  
+  {
+    
+    name: 'Explicit Architecture',
+    
+    detail:
+      
+      '責務・データ境界・同期方向・更新責任を明確にし、暗黙知に依存しない設計を重視する。',
+    
+  },
+  
+  {
+    
+    name: 'Operational Simplicity',
+    
+    detail:
+      
+      '運用で複雑になるものは、設計段階で再検討する。複雑さは後工程ほどコストになる。',
+    
+  },
+
+];
+---
+
+<BaseLayout
+  title="About · cilly-yllic"
+  description="エンジニアとしての関心領域、設計上重視していること。"
+>
+  <header class="page-header">
+    <p class="eyebrow">About</p>
+    <h1>About me</h1>
+    <p class="lead">
+        TypeScript を中心に、フロントエンド・バックエンド・データ同期設計まで横断して開発している Web エンジニア。
+        0→1 開発や運用改善を含め、リアルタイム性・整合性・保守性を意識したシステム設計を得意としている。
+    </p>
+  </header>
+
+  <Section title="興味領域">
+    <ul class="bullet-list">
+      {interests.map((item) => <li>{item}</li>)}
+    </ul>
+  </Section>
+
+  <Section title="重視していること">
+    <dl class="values">
+      {
+        values.map((v) => (
+          <div class="value-row">
+            <dt>{v.name}</dt>
+            <dd>{v.detail}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-16);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+  }
+
+  .bullet-list li {
+    font-size: 0.9375rem;
+    color: var(--fg);
+  }
+
+  .values {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .value-row {
+    border-left: 2px solid var(--border);
+    padding-left: var(--space-4);
+  }
+
+  dt {
+    color: var(--fg);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-2);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+const modes = [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'auto', label: 'Auto' },
+];
+---
+
+<div class="theme-toggle" role="radiogroup" aria-label="Theme">
+  {
+    modes.map((mode) => (
+      <button
+        type="button"
+        role="radio"
+        aria-checked="false"
+        data-theme-value={mode.value}
+      >
+        {mode.label}
+      </button>
+    ))
+  }
+</div>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    gap: 0;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+  }
+
+  button {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.75rem;
+    color: var(--fg-subtle);
+    cursor: pointer;
+    border-radius: calc(var(--radius-md) - 2px);
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  button:hover {
+    color: var(--fg);
+  }
+
+  button[aria-checked='true'] {
+    background: var(--bg-elevated);
+    color: var(--fg);
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const KEY = 'theme';
+    const valid = ['light', 'dark', 'auto'];
+
+    function getStored() {
+      const v = localStorage.getItem(KEY);
+      return valid.includes(v) ? v : 'auto';
+    }
+
+    function apply(value) {
+      const root = document.documentElement;
+      if (value === 'auto') {
+        delete root.dataset.theme;
+      } else {
+        root.dataset.theme = value;
+      }
+      const buttons = document.querySelectorAll('[data-theme-value]');
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-checked', btn.dataset.themeValue === value ? 'true' : 'false');
+      });
+    }
+
+    function sync() {
+      apply(getStored());
+    }
+
+    sync();
+
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-theme-value]');
+      if (!target) return;
+      const value = target.dataset.themeValue;
+      if (!valid.includes(value)) return;
+      localStorage.setItem(KEY, value);
+      apply(value);
+      document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: value } }));
+    });
+  })();
+</script>

@@ -1,0 +1,82 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { CATEGORIES, type CategorySlug } from '../../../content.config';
+
+export const getStaticPaths = (async () => {
+  return CATEGORIES.map((cat) => ({
+    params: { category: cat.slug },
+    props: { categorySlug: cat.slug, categoryTitle: cat.title },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  categorySlug: CategorySlug;
+  categoryTitle: string;
+}
+
+const { categorySlug, categoryTitle } = Astro.props;
+
+const notes = await getCollection(
+  'notes',
+  ({ data }) => !data.draft && data.category === categorySlug,
+);
+const sorted = notes.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+---
+
+<BaseLayout
+  title={`${categoryTitle} · Architecture Notes`}
+  description={`${categoryTitle} カテゴリの記事一覧。`}
+>
+  <header class="page-header">
+    <p class="eyebrow">Architecture Notes</p>
+    <h1>{categoryTitle}</h1>
+  </header>
+
+  <div class="card-list">
+    {
+      sorted.length === 0 ? (
+        <p class="empty">このカテゴリにはまだ記事がありません。</p>
+      ) : (
+        sorted.map((note) => (
+          <ArticleCard
+            title={note.data.title}
+            description={note.data.description}
+            category={note.data.category}
+            publishedAt={note.data.publishedAt}
+            href={`/notes/${note.id}/`}
+            showCategory={false}
+          />
+        ))
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 1.75rem;
+    margin: 0;
+  }
+
+  .empty {
+    color: var(--fg-subtle);
+    font-size: 0.9375rem;
+  }
+</style>

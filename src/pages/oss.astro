@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StatusCard from '../components/StatusCard.astro';
+
+interface OssItem {
+  title: string;
+  description: string;
+  status: 'Available' | 'Coming Soon' | 'Planned' | 'Archived';
+  href?: string;
+}
+
+const items: OssItem[] = [
+  {
+    title: '.llm',
+    description:
+      'AI コーディングエージェント向けの設定・プロンプト・ワークフローを共有するためのリポジトリ。',
+    status: 'Available',
+    href: 'https://github.com/cilly-yllic/.llm',
+  },
+  {
+    title: 'terraform-google-platform',
+    description:
+      'GCP / Firebase のプロジェクト基盤を構成駆動でプロビジョニングする Terraform モジュール。',
+    status: 'Available',
+    href: 'https://github.com/cilly-yllic/terraform-google-platform',
+  },
+  {
+    title: 'npm (@cilly)',
+    description: '自動化や効率化できそうなアイディアを公開しています。',
+    status: 'Available',
+    href: 'https://www.npmjs.com/~cilly',
+  },
+];
+---
+
+<BaseLayout
+  title="OSS · cilly-yllic"
+  description="公開しているライブラリ・ツール。"
+>
+  <header class="page-header">
+    <p class="eyebrow">Open Source</p>
+    <h1>OSS</h1>
+    <p class="lead">
+      実装の中で「これは他のプロジェクトでも欲しい」と思ったものから、
+      抽象度を上げて公開しているライブラリ・ツール群。
+    </p>
+  </header>
+
+  <div class="card-list">
+    {
+      items.map((item) => (
+        <StatusCard
+          title={item.title}
+          description={item.description}
+          status={item.status}
+          href={item.href}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+</style>

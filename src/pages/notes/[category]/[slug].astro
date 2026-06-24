@@ -1,0 +1,300 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { CATEGORIES } from '../../../content.config';
+
+export const getStaticPaths = (async () => {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  return notes.map((note) => {
+    const [category, slug] = note.id.split('/');
+    return {
+      params: { category, slug },
+      props: { note },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+
+const categoryTitle =
+  CATEGORIES.find((c) => c.slug === note.data.category)?.title ?? note.data.category;
+const date = note.data.publishedAt.toISOString().slice(0, 10);
+const updated = note.data.updatedAt?.toISOString().slice(0, 10);
+
+const siteUrl = Astro.site!;
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImage = new URL('/og-image.png', siteUrl).toString();
+
+const ldJson = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: note.data.title,
+  description: note.data.description,
+  datePublished: note.data.publishedAt.toISOString(),
+  ...(note.data.updatedAt && { dateModified: note.data.updatedAt.toISOString() }),
+  author: {
+    '@type': 'Person',
+    name: 'cilly-yllic',
+    url: siteUrl.toString(),
+  },
+  image: ogImage,
+  url: canonical,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonical,
+  },
+  articleSection: categoryTitle,
+};
+---
+
+<BaseLayout
+  title={`${note.data.title} · Architecture Notes`}
+  description={note.data.description}
+  ogType="article"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(ldJson)} is:inline />
+  </Fragment>
+
+  <article class="article">
+    <header class="article-header">
+      <p class="eyebrow">{categoryTitle}</p>
+      <h1>{note.data.title}</h1>
+      <p class="lead">{note.data.description}</p>
+      <div class="meta">
+        <time datetime={date}>Published {date}</time>
+        {updated && <time datetime={updated}>Updated {updated}</time>}
+      </div>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    margin-bottom: var(--space-12);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .article-header h1 {
+    font-size: 1.875rem;
+    margin: 0 0 var(--space-4);
+    text-transform: none;
+    letter-spacing: -0.015em;
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0 0 var(--space-4);
+    line-height: 1.6;
+  }
+
+  .meta {
+    display: flex;
+    gap: var(--space-4);
+    font-size: 0.8125rem;
+    color: var(--fg-subtle);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<style is:global>
+  .prose {
+    color: var(--fg);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .prose h2 {
+    font-size: 1.25rem;
+    margin: var(--space-12) 0 var(--space-4);
+    text-transform: none;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .prose h3 {
+    font-size: 1.0625rem;
+    margin: var(--space-8) 0 var(--space-3);
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .prose p {
+    margin: 0 0 var(--space-4);
+    color: var(--fg-muted);
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: var(--space-6);
+    margin: 0 0 var(--space-4);
+    color: var(--fg-muted);
+  }
+
+  .prose li {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    background: var(--border);
+    color: var(--fg);
+  }
+
+  .prose pre {
+    margin: var(--space-6) 0;
+    padding: var(--space-4);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .prose pre code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+  }
+
+  .prose blockquote {
+    margin: var(--space-6) 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--border);
+    color: var(--fg-subtle);
+    font-style: normal;
+  }
+
+  /* 本文画像: はみ出さないようにレスポンシブ化 + クリックで拡大できる見た目 */
+  .prose img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: var(--space-6) auto var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: zoom-in;
+  }
+
+  /* 画像直下の `*キャプション*`（em 単独の段落）を中央寄せの小さな注記にする */
+  .prose p > em:only-child {
+    display: block;
+    text-align: center;
+    font-style: normal;
+    font-size: 0.8125rem;
+    color: var(--fg-subtle);
+  }
+
+  /* クリックで開く lightbox（body 直下に JS で生成） */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 5vmin;
+    background: rgba(0, 0, 0, 0.85);
+    cursor: zoom-out;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .lightbox-overlay.open {
+    display: flex;
+    opacity: 1;
+  }
+
+  .lightbox-overlay img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Shiki dual theme: follow OS by default, override by data-theme */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .prose .astro-code,
+    :root:not([data-theme='light']) .prose .astro-code span {
+      color: var(--shiki-dark) !important;
+      background-color: var(--shiki-dark-bg) !important;
+      font-style: var(--shiki-dark-font-style) !important;
+      font-weight: var(--shiki-dark-font-weight) !important;
+      text-decoration: var(--shiki-dark-text-decoration) !important;
+    }
+  }
+
+  :root[data-theme='dark'] .prose .astro-code,
+  :root[data-theme='dark'] .prose .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+</style>
+
+<script>
+  // 本文画像 (.prose img) をクリックで lightbox 表示する。依存ライブラリなし。
+  // overlay クリック / Esc / もう一度クリックで閉じる。
+  const imgs = document.querySelectorAll<HTMLImageElement>('.prose img');
+  if (imgs.length) {
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox-overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    const big = document.createElement('img');
+    big.alt = '';
+    big.decoding = 'async';
+    overlay.appendChild(big);
+    document.body.appendChild(overlay);
+
+    const open = (img: HTMLImageElement) => {
+      big.src = img.currentSrc || img.src;
+      big.alt = img.alt;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+    const close = () => {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    imgs.forEach((img) => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => open(img));
+    });
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+  }
+</script>

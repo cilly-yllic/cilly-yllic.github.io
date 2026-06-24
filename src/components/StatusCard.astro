@@ -1,0 +1,80 @@
+---
+type Status = 'Available' | 'Coming Soon' | 'Planned' | 'Archived';
+
+interface Props {
+  title: string;
+  description: string;
+  status: Status;
+  href?: string;
+}
+
+const { title, description, status, href } = Astro.props;
+const isInteractive = !!href && status === 'Available';
+---
+
+<article class:list={['card', { interactive: isInteractive }]}>
+  {
+    isInteractive ? (
+      <a href={href} class="title-link">
+        <h3>{title}</h3>
+      </a>
+    ) : (
+      <h3>{title}</h3>
+    )
+  }
+  <p class="description">{description}</p>
+  <p class:list={['status', `status-${status.replace(/\s+/g, '-').toLowerCase()}`]}>
+    {status}
+  </p>
+</article>
+
+<style>
+  .card {
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card:last-child {
+    border-bottom: none;
+  }
+
+  .title-link {
+    text-decoration: none;
+    color: var(--fg);
+  }
+
+  .title-link:hover h3 {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  h3 {
+    margin: 0 0 var(--space-2);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--fg);
+    text-transform: none;
+    letter-spacing: -0.01em;
+  }
+
+  .description {
+    margin: 0 0 var(--space-3);
+    color: var(--fg-muted);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .status {
+    margin: 0;
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-subtle);
+  }
+
+  .status-available {
+    color: var(--fg);
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const nav = [
+  { label: 'Notes', href: '/notes/' },
+  { label: 'OSS', href: '/oss/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
+];
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="inner">
+    <a href="/" class="brand" aria-label="cilly-yllic, home">cilly-yllic</a>
+
+    <nav aria-label="Primary">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={['nav-link', { active: isActive(item.href) }]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .inner {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-6);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .brand {
+    color: var(--fg);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+  }
+
+  .brand:hover {
+    color: var(--link-hover);
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    justify-content: center;
+  }
+
+  .nav-link {
+    color: var(--fg-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--fg);
+  }
+
+  .nav-link.active {
+    color: var(--fg);
+    border-bottom-color: var(--fg);
+  }
+
+  @media (max-width: 720px) {
+    .inner {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      gap: var(--space-3);
+    }
+
+    nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+
+    nav ul {
+      justify-content: flex-start;
+    }
+  }
+</style>

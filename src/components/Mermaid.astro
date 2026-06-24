@@ -1,0 +1,90 @@
+---
+interface Props {
+  code: string;
+  caption?: string;
+}
+
+const { code, caption } = Astro.props;
+---
+
+<figure class="mermaid-figure">
+  <pre class="mermaid">{code}</pre>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .mermaid-figure {
+    margin: var(--space-6) 0 var(--space-8);
+    padding: var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    overflow-x: auto;
+  }
+
+  .mermaid {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-sans);
+    /* Hide raw source until rendered */
+    visibility: hidden;
+  }
+
+  .mermaid[data-processed='true'] {
+    visibility: visible;
+  }
+
+  figcaption {
+    margin-top: var(--space-4);
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--fg-subtle);
+  }
+</style>
+
+<script>
+  import mermaid from 'mermaid';
+
+  function isDarkMode(): boolean {
+    const explicit = document.documentElement.dataset.theme;
+    if (explicit === 'dark') return true;
+    if (explicit === 'light') return false;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function init() {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDarkMode() ? 'dark' : 'neutral',
+      securityLevel: 'strict',
+      fontFamily: 'inherit',
+      flowchart: {
+        curve: 'basis',
+        htmlLabels: true,
+      },
+      themeVariables: {
+        fontSize: '14px',
+      },
+    });
+  }
+
+  async function render() {
+    // Reset processed state so we can re-render on theme change.
+    document.querySelectorAll<HTMLElement>('pre.mermaid').forEach((el) => {
+      if (el.dataset.original) {
+        el.innerHTML = el.dataset.original;
+      } else if (el.textContent) {
+        el.dataset.original = el.textContent;
+      }
+      el.removeAttribute('data-processed');
+    });
+    init();
+    await mermaid.run({ querySelector: 'pre.mermaid' });
+  }
+
+  await render();
+
+  document.addEventListener('themechange', () => {
+    void render();
+  });
+</script>

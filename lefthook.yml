@@ -1,0 +1,16 @@
+pre-commit:
+  parallel: false
+  commands:
+    oxfmt:
+      glob: '*.{js,mjs,cjs,ts,mts,cts,tsx,jsx}'
+      run: npx oxfmt --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+    oxlint:
+      glob: '*.{js,mjs,cjs,ts,mts,cts,tsx,jsx}'
+      run: npx oxlint --fix {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    astro-check:
+      run: npx astro check

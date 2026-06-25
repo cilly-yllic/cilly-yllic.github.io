@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
-import StatusCard from '../components/StatusCard.astro';
+import OssCard from '../components/OssCard.astro';
 import heroImage from '../assets/life/gallery/013.jpg';
 
 interface OssItem {
@@ -61,7 +61,7 @@ const items: OssItem[] = [
   <div class="card-list">
     {
       items.map((item) => (
-        <StatusCard
+        <OssCard
           title={item.title}
           description={item.description}
           status={item.status}
@@ -111,5 +111,11 @@ const items: OssItem[] = [
     color: var(--fg);
     max-width: 36rem;
     margin: 0;
+  }
+
+  .card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-4);
   }
 </style>

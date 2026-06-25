@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  image: ImageMetadata;
+  alt?: string;
+}
+
+const { image, alt = '' } = Astro.props;
+---
+
+<div class="hero-media">
+  <Image
+    src={image}
+    alt={alt}
+    widths={[760, 1200]}
+    sizes="(max-width: 760px) 100vw, 720px"
+    loading="eager"
+    decoding="async"
+  />
+</div>
+
+<style>
+  /* トップページの hero と同じ見せ方（1200/630・hover ズーム・登場アニメ） */
+  .hero-media {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 1200 / 630;
+    margin-bottom: var(--space-8);
+    transition: border-color 0.2s ease;
+    animation: hero-rise 0.6s ease both;
+  }
+
+  .hero-media:hover {
+    border-color: var(--border-strong);
+  }
+
+  .hero-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .hero-media:hover img {
+    transform: scale(1.02);
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

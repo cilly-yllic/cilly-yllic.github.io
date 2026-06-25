@@ -1,8 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import { CATEGORIES, type CategorySlug } from '../../content.config';
+import heroImage from '../../assets/notes-hero.png';
 
 const allNotes = await getCollection('notes', ({ data }) => !data.draft);
 const sorted = allNotes.sort(
@@ -19,9 +21,19 @@ function countByCategory(slug: CategorySlug) {
 ---
 
 <BaseLayout
-  title="Architecture Notes · cilly-yllic"
+  title="Architecture Notes · cilly"
   description="技術思想・設計思想に関する記事。Firebase / GCP。"
 >
+  <div class="hero">
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[760, 1200]}
+      sizes="(max-width: 760px) 100vw, 720px"
+      loading="eager"
+    />
+  </div>
+
   <header class="page-header">
     <p class="eyebrow">Architecture Notes</p>
     <h1>Notes</h1>
@@ -64,6 +76,22 @@ function countByCategory(slug: CategorySlug) {
 </BaseLayout>
 
 <style>
+  .hero {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--space-8);
+  }
+
+  .hero :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .page-header {
     margin-bottom: var(--space-16);
   }

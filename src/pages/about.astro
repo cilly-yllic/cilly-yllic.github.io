@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/Section.astro';
+import HeroMedia from '../components/HeroMedia.astro';
+import heroImage from '../assets/life/gallery/007.jpg';
 
 const interests = [
   
@@ -74,9 +76,11 @@ const values = [
 ---
 
 <BaseLayout
-  title="About · cilly-yllic"
+  title="About · cilly"
   description="エンジニアとしての関心領域、設計上重視していること。"
 >
+  <HeroMedia image={heroImage} />
+
   <header class="page-header">
     <p class="eyebrow">About</p>
     <h1>About me</h1>

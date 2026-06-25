@@ -7,7 +7,7 @@ export async function GET(context: APIContext) {
   const sorted = notes.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 
   return rss({
-    title: 'cilly-yllic — Architecture Notes',
+    title: 'cilly — Architecture Notes',
     description: '技術思想・設計思想に関する記事の RSS フィード。',
     site: context.site!,
     items: sorted.map((note) => ({

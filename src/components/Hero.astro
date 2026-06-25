@@ -1,27 +1,187 @@
 ---
+interface Cta {
+  label: string;
+  href: string;
+}
+
 interface Props {
   name: string;
   tagline: string;
+  eyebrow?: string;
+  image?: string;
+  imageAlt?: string;
+  ctas?: Cta[];
 }
 
-const { name, tagline } = Astro.props;
+const { name, tagline, eyebrow, image, imageAlt = '', ctas = [] } = Astro.props;
 ---
 
 <header class="hero">
-  <h1>{name}</h1>
-  <p class="tagline">{tagline}</p>
+  {
+    image && (
+      <div class="hero__media">
+        <img
+          src={image}
+          alt={imageAlt}
+          width="1200"
+          height="630"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )
+  }
+
+  <div class="hero__text">
+    {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
+    <h1 class="hero__name">{name}</h1>
+    <p class="tagline">{tagline}</p>
+    {
+      ctas.length > 0 && (
+        <nav class="hero__ctas" aria-label="Primary actions">
+          {ctas.map((cta, i) => (
+            <a
+              href={cta.href}
+              class:list={['cta', { 'cta--primary': i === 0 }]}
+            >
+              {cta.label}
+            </a>
+          ))}
+        </nav>
+      )
+    }
+  </div>
 </header>
 
 <style>
   .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
     margin-bottom: var(--space-16);
+  }
+
+  .hero__media {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 1200 / 630;
+    transition: border-color 0.2s ease;
+  }
+
+  .hero__media:hover {
+    border-color: var(--border-strong);
+  }
+
+  .hero__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .hero__media:hover img {
+    transform: scale(1.02);
+  }
+
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-4);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .hero__eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .hero__name {
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    margin: 0 0 var(--space-4);
   }
 
   .tagline {
     font-size: 1.0625rem;
     line-height: 1.6;
-    color: var(--fg);
+    color: var(--fg-muted);
     margin: 0;
     max-width: 36rem;
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    color: var(--fg);
+    transition:
+      color 0.15s ease,
+      background 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .cta:hover {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+
+  .cta--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  .cta--primary:hover {
+    background: var(--link-hover);
+    border-color: var(--link-hover);
+    color: var(--bg);
+  }
+
+  /* Animated entrance — neutralized under prefers-reduced-motion via base.css */
+  .hero__media,
+  .hero__text {
+    animation: hero-rise 0.6s ease both;
+  }
+
+  .hero__text {
+    animation-delay: 0.08s;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>

@@ -7,72 +7,151 @@ interface Props {
   category: CategorySlug;
   publishedAt: Date;
   href: string;
+  image?: string;
+  imageAlt?: string;
   showCategory?: boolean;
 }
 
-const { title, description, category, publishedAt, href, showCategory = true } =
-  Astro.props;
+const {
+  title,
+  description,
+  category,
+  publishedAt,
+  href,
+  image,
+  imageAlt = '',
+  showCategory = true,
+} = Astro.props;
 
 const categoryTitle = CATEGORIES.find((c) => c.slug === category)?.title ?? category;
 const date = publishedAt.toISOString().slice(0, 10);
 ---
 
 <article class="card">
-  <a href={href} class="title-link">
-    <h3>{title}</h3>
+  <a href={href} class="card__link">
+    {
+      image ? (
+        <div class="card__media">
+          <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+        </div>
+      ) : (
+        <div class="card__media card__media--placeholder">
+          <span class="card__placeholder-label">{categoryTitle}</span>
+        </div>
+      )
+    }
+    <div class="card__body">
+      <h3 class="card__title">{title}</h3>
+      <p class="card__desc">{description}</p>
+      <div class="card__meta">
+        <time datetime={date}>{date}</time>
+        {showCategory && <span class="card__category">{categoryTitle}</span>}
+      </div>
+    </div>
   </a>
-  <p class="description">{description}</p>
-  <div class="meta">
-    <time datetime={date}>{date}</time>
-    {showCategory && <span class="category">{categoryTitle}</span>}
-  </div>
 </article>
 
 <style>
   .card {
-    padding: var(--space-6) 0;
+    height: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg);
+    transition: border-color 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-strong);
+  }
+
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card__media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-elevated);
     border-bottom: 1px solid var(--border);
   }
 
-  .card:last-child {
-    border-bottom: none;
+  .card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
   }
 
-  .title-link {
-    text-decoration: none;
+  .card:hover .card__media img {
+    transform: scale(1.03);
+  }
+
+  /* 画像がない記事用のプレースホルダー（画像ありカードと同じ 16:9 領域） */
+  .card__media--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-elevated);
+    background-image: radial-gradient(var(--border) 1.2px, transparent 1.2px);
+    background-size: 14px 14px;
+  }
+
+  .card__placeholder-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--fg-subtle);
+    background: var(--bg-elevated);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-4);
+  }
+
+  .card__title {
+    margin: 0 0 var(--space-2);
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--fg);
+    text-transform: none;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
   }
 
-  .title-link:hover h3 {
+  .card__link:hover .card__title {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
   }
 
-  h3 {
-    margin: 0 0 var(--space-2);
-    font-size: 1.0625rem;
-    font-weight: 600;
-    color: var(--fg);
-    text-transform: none;
-    letter-spacing: -0.01em;
-  }
-
-  .description {
-    margin: 0 0 var(--space-3);
+  .card__desc {
+    margin: 0 0 var(--space-4);
     color: var(--fg-muted);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     line-height: 1.6;
   }
 
-  .meta {
+  .card__meta {
+    margin-top: auto;
     display: flex;
     gap: var(--space-4);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: var(--fg-subtle);
   }
 
-  .meta time {
+  .card__meta time {
     font-variant-numeric: tabular-nums;
   }
 </style>

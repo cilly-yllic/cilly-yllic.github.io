@@ -20,6 +20,16 @@ const interests = [
 
 ];
 
+// 興味タグの色（index 順に割り当て）。color-mix でテーマに馴染ませる
+const tagColors = [
+  '#1c7ed6', // blue
+  '#0ca678', // teal
+  '#7048e8', // violet
+  '#e8590c', // orange
+  '#2f9e44', // green
+  '#e64980', // pink
+];
+
 const values = [
   
   {
@@ -91,8 +101,14 @@ const values = [
   </header>
 
   <Section title="興味領域">
-    <ul class="bullet-list">
-      {interests.map((item) => <li>{item}</li>)}
+    <ul class="tag-list">
+      {
+        interests.map((item, i) => (
+          <li class="tag" style={`--tag: ${tagColors[i % tagColors.length]}`}>
+            {item}
+          </li>
+        ))
+      }
     </ul>
   </Section>
 
@@ -135,18 +151,23 @@ const values = [
     margin: 0;
   }
 
-  .bullet-list {
+  .tag-list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4) var(--space-6);
+    gap: var(--space-2) var(--space-3);
   }
 
-  .bullet-list li {
-    font-size: 0.9375rem;
-    color: var(--fg);
+  .tag {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--tag) 12%, var(--bg));
+    border: 1px solid color-mix(in srgb, var(--tag) 32%, transparent);
+    color: color-mix(in srgb, var(--tag), var(--fg) 28%);
   }
 
   .values {

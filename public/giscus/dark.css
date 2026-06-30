@@ -5,17 +5,17 @@
  */
 @import url("https://giscus.app/themes/dark.css");
 
-/* リアクションバーを小さく・右寄せ・余白圧縮（本文直後の主張を抑える） */
+/*
+ * リアクションバーを控えめに（小さく・余白圧縮・少し淡く）。
+ * ※ 右端へ寄せると、ホバー時のツールチップが iframe 端で見切れるため
+ *   right 寄せはせず giscus 既定の配置のままサイズだけ抑える。
+ */
 .gsc-reactions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-size: 0.82em;
+  font-size: 0.85em;
   margin: 0 0 0.5rem;
 }
 
 .gsc-reactions-count {
-  margin-bottom: 0.25rem;
   opacity: 0.85;
 }
 

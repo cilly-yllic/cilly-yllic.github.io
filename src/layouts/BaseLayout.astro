@@ -3,6 +3,8 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import AnalyticsEvents from '../components/AnalyticsEvents.astro';
 
 interface Props {
   title?: string;
@@ -26,6 +28,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    <GoogleAnalytics />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -73,6 +77,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       <slot />
     </main>
     <SiteFooter />
+    <AnalyticsEvents />
   </body>
 </html>
 

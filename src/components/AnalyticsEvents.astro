@@ -1,0 +1,82 @@
+---
+// Client-side GA4 event tracking: session landing (page + referrer) and
+// delegated link/button click capture. Only rendered alongside gtag.js.
+const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+const enabled = import.meta.env.PROD && Boolean(measurementId);
+---
+
+{
+  enabled && (
+    <script is:inline>
+      (() => {
+        const send = (name, params) => {
+          if (typeof window.gtag === 'function') window.gtag('event', name, params);
+        };
+
+        const truncate = (value, max) => {
+          const s = String(value || '').trim().replace(/\s+/g, ' ');
+          return s.length > max ? s.slice(0, max) : s;
+        };
+
+        const labelOf = (el) =>
+          truncate(
+            el.getAttribute('aria-label') || el.textContent || el.getAttribute('title') || '',
+            100,
+          );
+
+        // First view of the session: which page and where it came from.
+        const trackLanding = () => {
+          const KEY = 'ga:landing_sent';
+          try {
+            if (sessionStorage.getItem(KEY)) return;
+            sessionStorage.setItem(KEY, '1');
+          } catch (_) {
+            /* storage blocked: send once per load instead */
+          }
+          const ref = document.referrer;
+          send('landing_view', {
+            landing_page: location.pathname,
+            landing_location: location.href,
+            referrer: ref || '(direct)',
+            referrer_domain: ref ? new URL(ref).hostname : '(direct)',
+          });
+        };
+
+        const DOWNLOAD_RE =
+          /\.(pdf|zip|gz|tar|dmg|exe|csv|xlsx?|docx?|pptx?|png|jpe?g|svg|mp4|mp3)$/i;
+
+        const trackClick = (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          const el = target.closest('a[href], button, [role="button"]');
+          if (!el) return;
+
+          const context = { from_page: location.pathname, page_title: document.title };
+
+          if (el.tagName === 'A') {
+            const url = new URL(el.href, location.href);
+            const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+            send('link_click', {
+              ...context,
+              link_text: labelOf(el),
+              link_url: url.href,
+              link_domain: url.hostname || url.protocol.replace(':', ''),
+              link_id: el.id || undefined,
+              outbound: isHttp && url.host !== location.host,
+              is_download: el.hasAttribute('download') || DOWNLOAD_RE.test(url.pathname),
+            });
+          } else {
+            send('button_click', {
+              ...context,
+              button_text: labelOf(el),
+              button_id: el.id || undefined,
+            });
+          }
+        };
+
+        trackLanding();
+        document.addEventListener('click', trackClick, { capture: true });
+      })();
+    </script>
+  )
+}

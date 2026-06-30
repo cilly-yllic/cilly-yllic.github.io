@@ -1,5 +1,6 @@
 ---
 import { CATEGORIES, type CategorySlug } from '../content.config';
+import DiscussionStats from './DiscussionStats.astro';
 
 interface Props {
   title: string;
@@ -10,6 +11,10 @@ interface Props {
   image?: string;
   imageAlt?: string;
   showCategory?: boolean;
+  /** コメント数（ビルド時に GitHub Discussions から取得。未取得なら undefined） */
+  commentCount?: number;
+  /** いいね(リアクション)数。未取得なら undefined */
+  reactionCount?: number;
 }
 
 const {
@@ -21,6 +26,8 @@ const {
   image,
   imageAlt = '',
   showCategory = true,
+  commentCount,
+  reactionCount,
 } = Astro.props;
 
 const categoryTitle = CATEGORIES.find((c) => c.slug === category)?.title ?? category;
@@ -46,6 +53,7 @@ const date = publishedAt.toISOString().slice(0, 10);
       <div class="card__meta">
         <time datetime={date}>{date}</time>
         {showCategory && <span class="card__category">{categoryTitle}</span>}
+        <DiscussionStats comments={commentCount} reactions={reactionCount} class="card__stats" />
       </div>
     </div>
   </a>
@@ -153,5 +161,10 @@ const date = publishedAt.toISOString().slice(0, 10);
 
   .card__meta time {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* カウントは右端へ寄せる */
+  .card__stats {
+    margin-left: auto;
   }
 </style>

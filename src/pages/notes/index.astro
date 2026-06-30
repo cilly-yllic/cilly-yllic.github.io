@@ -4,12 +4,16 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import { CATEGORIES, type CategorySlug } from '../../content.config';
+import { termForNote } from '../../config/giscus';
+import { getDiscussionStats } from '../../lib/discussions';
 import heroImage from '../../assets/notes-hero.png';
 
 const allNotes = await getCollection('notes', ({ data }) => !data.draft);
 const sorted = allNotes.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
+
+const stats = await getDiscussionStats();
 
 function entryHref(id: string) {
   return `/notes/${id}/`;
@@ -69,6 +73,7 @@ function firstImage(body?: string) {
       {
         sorted.map((note) => {
           const img = firstImage(note.body);
+          const stat = stats.get(termForNote(note.id));
           return (
             <ArticleCard
               title={note.data.title}
@@ -78,6 +83,8 @@ function firstImage(body?: string) {
               href={entryHref(note.id)}
               image={img?.src}
               imageAlt={img?.alt}
+              commentCount={stat?.comments}
+              reactionCount={stat?.reactions}
             />
           );
         })

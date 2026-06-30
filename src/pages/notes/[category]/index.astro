@@ -4,6 +4,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
 import { CATEGORIES, type CategorySlug } from '../../../content.config';
+import { termForNote } from '../../../config/giscus';
+import { getDiscussionStats } from '../../../lib/discussions';
 
 export const getStaticPaths = (async () => {
   return CATEGORIES.map((cat) => ({
@@ -26,6 +28,8 @@ const notes = await getCollection(
 const sorted = notes.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
+
+const stats = await getDiscussionStats();
 
 // 本文 markdown から最初の画像（![alt](src)）を取り出す
 function firstImage(body?: string) {
@@ -50,6 +54,7 @@ function firstImage(body?: string) {
       ) : (
         sorted.map((note) => {
           const img = firstImage(note.body);
+          const stat = stats.get(termForNote(note.id));
           return (
             <ArticleCard
               title={note.data.title}
@@ -60,6 +65,8 @@ function firstImage(body?: string) {
               image={img?.src}
               imageAlt={img?.alt}
               showCategory={false}
+              commentCount={stat?.comments}
+              reactionCount={stat?.reactions}
             />
           );
         })

@@ -1,0 +1,209 @@
+---
+// 記事ページ専用のコメント欄（giscus / GitHub Discussions）。
+//
+// ── mapping に 'specific' を採用した理由 ────────────────────────────────
+// 候補のうち pathname / url / og:title / title はいずれも「URL や見出し」を
+// キーにするため、後でパーマリンクや記事タイトルを変えると過去のコメントが
+// 紐付かなくなる。specific は任意の固定文字列(term)をキーにできるので、
+// ここでは URL から独立した note.id ("<category>/<slug>") を term に渡す。
+// これにより URL 変更・タイトル変更のどちらにも強い紐付けになる。
+//
+// ── 設計方針 ──────────────────────────────────────────────────────────
+// ・設定値は src/config/giscus.ts に集約。props で各項目を上書きできる。
+// ・読み込みは IntersectionObserver による遅延ロード（本文表示を優先）。
+// ・テーマはサイトの data-theme と同期し、リロード不要で切り替わる。
+import {
+  GISCUS_CONFIG,
+  GISCUS_ORIGIN,
+  GISCUS_SCRIPT_SRC,
+  isGiscusConfigured,
+  type GiscusConfig,
+} from '../config/giscus';
+
+interface Props extends Partial<GiscusConfig> {
+  /** Discussion を一意に紐付ける term。通常は note.id を渡す。 */
+  term: string;
+  /** ルート要素へ付与する追加クラス */
+  class?: string;
+}
+
+const { term, class: className, ...overrides } = Astro.props;
+
+// 既定値(GISCUS_CONFIG)を props で部分的に上書き。
+const config: GiscusConfig = {
+  repo: overrides.repo ?? GISCUS_CONFIG.repo,
+  repoId: overrides.repoId ?? GISCUS_CONFIG.repoId,
+  category: overrides.category ?? GISCUS_CONFIG.category,
+  categoryId: overrides.categoryId ?? GISCUS_CONFIG.categoryId,
+  mapping: overrides.mapping ?? GISCUS_CONFIG.mapping,
+  strict: overrides.strict ?? GISCUS_CONFIG.strict,
+  reactionsEnabled: overrides.reactionsEnabled ?? GISCUS_CONFIG.reactionsEnabled,
+  emitMetadata: overrides.emitMetadata ?? GISCUS_CONFIG.emitMetadata,
+  inputPosition: overrides.inputPosition ?? GISCUS_CONFIG.inputPosition,
+  lang: overrides.lang ?? GISCUS_CONFIG.lang,
+};
+
+const configured = isGiscusConfigured(config);
+---
+
+<section class:list={['comments', className]} aria-labelledby="comments-heading">
+  <h2 id="comments-heading" class="comments__heading">コメント</h2>
+
+  {
+    configured ? (
+      <div
+        class="comments__giscus"
+        data-giscus-root
+        data-origin={GISCUS_ORIGIN}
+        data-script-src={GISCUS_SCRIPT_SRC}
+        data-repo={config.repo}
+        data-repo-id={config.repoId}
+        data-category={config.category}
+        data-category-id={config.categoryId}
+        data-mapping={config.mapping}
+        data-term={term}
+        data-strict={config.strict}
+        data-reactions-enabled={config.reactionsEnabled}
+        data-emit-metadata={config.emitMetadata}
+        data-input-position={config.inputPosition}
+        data-lang={config.lang}
+      >
+        <p class="comments__status" role="status">
+          コメントを読み込んでいます…
+        </p>
+      </div>
+    ) : (
+      <p class="comments__placeholder" role="note">
+        コメント機能は現在準備中です。
+      </p>
+    )
+  }
+</section>
+
+<style>
+  .comments {
+    margin-top: var(--space-16);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border);
+  }
+
+  .comments__heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--space-6);
+    color: var(--fg);
+  }
+
+  /* iframe が入るまでの最小高さ確保＝レイアウトシフト防止 */
+  .comments__giscus {
+    min-height: 8rem;
+  }
+
+  /* giscus が生成する iframe をレスポンシブに */
+  .comments__giscus :global(.giscus),
+  .comments__giscus :global(.giscus-frame) {
+    width: 100%;
+  }
+
+  .comments__status,
+  .comments__placeholder {
+    font-size: 0.875rem;
+    color: var(--fg-subtle);
+    margin: 0;
+  }
+</style>
+
+<script is:inline>
+  // is:inline でクライアント実行（既存 ThemeToggle と同じ流儀）。
+  (() => {
+    const root = document.querySelector('[data-giscus-root]');
+    if (!root || root.dataset.giscusLoaded) return;
+
+    const ORIGIN = root.dataset.origin;
+
+    // サイトの実効テーマ('light'/'dark')。data-theme が無い(=auto)場合は OS 設定にフォールバック。
+    function effectiveTheme() {
+      const t = document.documentElement.dataset.theme;
+      if (t === 'light' || t === 'dark') return t;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    // giscus へ渡すテーマ。公式テーマを土台にリアクションを控えめにした
+    // 自前 CSS（/giscus/{light,dark}.css）の絶対 URL を指定する。
+    // location.origin 基準なので dev は localhost、本番は本番ドメインを読む。
+    function giscusTheme() {
+      return location.origin + '/giscus/' + effectiveTheme() + '.css';
+    }
+
+    function postTheme() {
+      const frame = root.querySelector('iframe.giscus-frame');
+      if (!frame || !frame.contentWindow) return;
+      frame.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme() } } },
+        ORIGIN,
+      );
+    }
+
+    function load() {
+      if (root.dataset.giscusLoaded) return;
+      root.dataset.giscusLoaded = 'true';
+
+      const s = document.createElement('script');
+      s.src = root.dataset.scriptSrc;
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.setAttribute('data-repo', root.dataset.repo);
+      s.setAttribute('data-repo-id', root.dataset.repoId);
+      s.setAttribute('data-category', root.dataset.category);
+      s.setAttribute('data-category-id', root.dataset.categoryId);
+      s.setAttribute('data-mapping', root.dataset.mapping);
+      s.setAttribute('data-term', root.dataset.term);
+      s.setAttribute('data-strict', root.dataset.strict);
+      s.setAttribute('data-reactions-enabled', root.dataset.reactionsEnabled);
+      s.setAttribute('data-emit-metadata', root.dataset.emitMetadata);
+      s.setAttribute('data-input-position', root.dataset.inputPosition);
+      s.setAttribute('data-theme', giscusTheme());
+      s.setAttribute('data-lang', root.dataset.lang);
+      // 公式の遅延ロード（iframe を loading="lazy" で挿入）。
+      s.setAttribute('data-loading', 'lazy');
+      root.appendChild(s);
+    }
+
+    // 1) コメント欄が近づいたら読み込む（本文の表示を優先）。
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              io.disconnect();
+              load();
+            }
+          }
+        },
+        { rootMargin: '200px 0px' },
+      );
+      io.observe(root);
+    } else {
+      load();
+    }
+
+    // 2) giscus からの最初のメッセージで「読み込み中」表示を消す。
+    window.addEventListener('message', (event) => {
+      if (event.origin !== ORIGIN) return;
+      const data = event.data;
+      if (!data || typeof data !== 'object' || !('giscus' in data)) return;
+      const status = root.querySelector('.comments__status');
+      if (status) status.remove();
+      // 必要なら data.giscus.discussion からコメント数/リアクション数を取得可能
+      // （emit-metadata を有効化しているため）。
+    });
+
+    // 3) テーマ同期: トグル操作(themechange) と OS 設定変更(auto時) を反映。
+    document.addEventListener('themechange', postTheme);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (!document.documentElement.dataset.theme) postTheme();
+    });
+  })();
+</script>

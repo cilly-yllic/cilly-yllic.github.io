@@ -44,6 +44,11 @@ const config: GiscusConfig = {
 };
 
 const configured = isGiscusConfigured(config);
+
+// サードパーティ Cookie ブロック等で giscus 上のサインインができない人向けの逃げ道。
+// GitHub(=ファーストパーティ)上で直接コメントできるよう、該当 term の
+// Discussions 検索 URL を初期値にする。実際の Discussion URL が判れば JS で差し替える。
+const discussionsFallbackUrl = `https://github.com/${config.repo}/discussions?discussions_q=${encodeURIComponent(term)}`;
 ---
 
 <section class:list={['comments', className]} aria-labelledby="comments-heading">
@@ -51,9 +56,10 @@ const configured = isGiscusConfigured(config);
 
   {
     configured ? (
-      <div
-        class="comments__giscus"
-        data-giscus-root
+      <Fragment>
+        <div
+          class="comments__giscus"
+          data-giscus-root
         data-origin={GISCUS_ORIGIN}
         data-script-src={GISCUS_SCRIPT_SRC}
         data-repo={config.repo}
@@ -72,6 +78,18 @@ const configured = isGiscusConfigured(config);
           コメントを読み込んでいます…
         </p>
       </div>
+      <p class="comments__fallback">
+        コメントできない場合は
+        <a
+          data-giscus-link
+          href={discussionsFallbackUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub で開く ↗
+        </a>
+      </p>
+      </Fragment>
     ) : (
       <p class="comments__placeholder" role="note">
         コメント機能は現在準備中です。
@@ -112,6 +130,21 @@ const configured = isGiscusConfigured(config);
     font-size: 0.875rem;
     color: var(--fg-subtle);
     margin: 0;
+  }
+
+  .comments__fallback {
+    margin: var(--space-3) 0 0;
+    font-size: 0.8125rem;
+    color: var(--fg-subtle);
+  }
+
+  .comments__fallback a {
+    color: var(--fg-muted);
+    text-underline-offset: 3px;
+  }
+
+  .comments__fallback a:hover {
+    color: var(--fg);
   }
 </style>
 
@@ -196,8 +229,13 @@ const configured = isGiscusConfigured(config);
       if (!data || typeof data !== 'object' || !('giscus' in data)) return;
       const status = root.querySelector('.comments__status');
       if (status) status.remove();
-      // 必要なら data.giscus.discussion からコメント数/リアクション数を取得可能
-      // （emit-metadata を有効化しているため）。
+      // emit-metadata で送られてくる Discussion の実 URL があれば、
+      // フォールバックリンクを検索 URL から該当スレッドへ差し替える。
+      const url = data.giscus.discussion && data.giscus.discussion.url;
+      if (url) {
+        const link = document.querySelector('[data-giscus-link]');
+        if (link) link.setAttribute('href', url);
+      }
     });
 
     // 3) テーマ同期: トグル操作(themechange) と OS 設定変更(auto時) を反映。

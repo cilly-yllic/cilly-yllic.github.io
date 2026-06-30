@@ -1,0 +1,25 @@
+/*
+ * giscus 用カスタムテーマ（Dark）。
+ * 公式 dark テーマを土台に、ディスカッション本体のリアクションバーだけ控えめにする。
+ * 調整内容は light.css と揃える。
+ */
+@import url("https://giscus.app/themes/dark.css");
+
+/* リアクションバーを小さく・右寄せ・余白圧縮（本文直後の主張を抑える） */
+.gsc-reactions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.82em;
+  margin: 0 0 0.5rem;
+}
+
+.gsc-reactions-count {
+  margin-bottom: 0.25rem;
+  opacity: 0.85;
+}
+
+/* 絵文字ボタン列も詰める */
+.gsc-direct-reaction-buttons {
+  gap: 0.15rem;
+}

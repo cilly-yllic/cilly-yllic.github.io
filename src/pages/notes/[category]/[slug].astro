@@ -2,7 +2,9 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Giscus from '../../../components/Giscus.astro';
 import { CATEGORIES } from '../../../content.config';
+import { termForNote } from '../../../config/giscus';
 
 export const getStaticPaths = (async () => {
   const notes = await getCollection('notes', ({ data }) => !data.draft);
@@ -72,6 +74,8 @@ const ldJson = {
     <div class="prose">
       <Content />
     </div>
+
+    <Giscus term={termForNote(note.id)} />
   </article>
 </BaseLayout>
 

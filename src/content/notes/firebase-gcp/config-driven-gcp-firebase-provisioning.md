@@ -72,7 +72,7 @@ environments:
 
 ## 公開先
 
-この基盤は OSS として公開しています。Terraform Module と GitHub Actions のモノリポで、誰でも利用できます。
+この基盤は OSS として公開しています。Terraform Module と GitHub Actions のモノレポで、誰でも利用できます。
 
 - リポジトリ — [github.com/cilly-yllic/terraform-google-platform](https://github.com/cilly-yllic/terraform-google-platform)
 - Terraform Registry — [registry.terraform.io/modules/cilly-yllic/platform/google](https://registry.terraform.io/modules/cilly-yllic/platform/google/latest)

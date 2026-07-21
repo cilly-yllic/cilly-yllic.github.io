@@ -1,5 +1,6 @@
 ---
-import { CATEGORIES, type CategorySlug } from '../content.config';
+import { categoryTitle as categoryTitleFor, type CategorySlug } from '../content.config';
+import type { Locale } from '../i18n';
 import DiscussionStats from './DiscussionStats.astro';
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
   image?: string;
   imageAlt?: string;
   showCategory?: boolean;
+  /** カテゴリ名の表示言語 (既定: ja) */
+  locale?: Locale;
   /** コメント数（ビルド時に GitHub Discussions から取得。未取得なら undefined） */
   commentCount?: number;
   /** いいね(リアクション)数。未取得なら undefined */
@@ -26,11 +29,12 @@ const {
   image,
   imageAlt = '',
   showCategory = true,
+  locale = 'ja',
   commentCount,
   reactionCount,
 } = Astro.props;
 
-const categoryTitle = CATEGORIES.find((c) => c.slug === category)?.title ?? category;
+const categoryTitle = categoryTitleFor(category, locale);
 const date = publishedAt.toISOString().slice(0, 10);
 ---
 

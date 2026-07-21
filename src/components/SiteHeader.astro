@@ -1,5 +1,15 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { getLocaleFromPath, localePath, LOCALES } from '../i18n';
+
+interface Props {
+  /** 反対言語での同一ページのパス。null なら未翻訳 (プルダウンはセクショントップへ) */
+  altUrl?: string | null;
+}
+
+const { altUrl = null } = Astro.props;
+
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 const nav = [
   { label: 'Notes', href: '/notes/' },
@@ -11,15 +21,18 @@ const nav = [
 
 const currentPath = Astro.url.pathname;
 
-function isActive(href: string) {
-  if (href === '/') return currentPath === '/';
+function isActive(jaHref: string) {
+  const href = localePath(locale, jaHref);
+  if (href === '/' || href === '/en/') return currentPath === href;
   return currentPath === href || currentPath.startsWith(href);
 }
+
+const home = localePath(locale, '/');
 ---
 
 <header class="site-header">
   <div class="inner">
-    <a href="/" class="brand" aria-label="cilly, home">cilly</a>
+    <a href={home} class="brand" aria-label="cilly, home">cilly</a>
 
     <nav aria-label="Primary">
       <ul>
@@ -27,7 +40,7 @@ function isActive(href: string) {
           nav.map((item) => (
             <li>
               <a
-                href={item.href}
+                href={localePath(locale, item.href)}
                 class:list={['nav-link', { active: isActive(item.href) }]}
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
@@ -40,10 +53,49 @@ function isActive(href: string) {
     </nav>
 
     <div class="actions">
+      <label class="lang-switch">
+        <span class="visually-hidden">Language</span>
+        <select id="lang-select" data-alt-url={altUrl ?? undefined} aria-label="Language">
+          {
+            LOCALES.map((l) => (
+              <option value={l} selected={l === locale}>
+                {l === 'ja' ? '日本語' : 'English'}
+              </option>
+            ))
+          }
+        </select>
+      </label>
       <ThemeToggle />
     </div>
   </div>
 </header>
+
+<script>
+  // 言語プルダウン: 選択を localStorage に保存し、反対言語の対応ページへ遷移する。
+  // 対応ページが無い (data-alt-url 無し = 未翻訳記事など) 場合は Notes 一覧へフォールバック。
+  const select = document.getElementById('lang-select') as HTMLSelectElement | null;
+  if (select) {
+    select.addEventListener('change', () => {
+      const target = select.value;
+      localStorage.setItem('locale', target);
+
+      const current = document.documentElement.dataset.locale;
+      if (target === current) return;
+
+      const altUrl = select.dataset.altUrl;
+      if (altUrl) {
+        location.href = altUrl;
+        return;
+      }
+      const inNotes = location.pathname.includes('/notes/');
+      if (target === 'en') {
+        location.href = inNotes ? '/en/notes/' : '/en/';
+      } else {
+        location.href = inNotes ? '/notes/' : '/';
+      }
+    });
+  }
+</script>
 
 <style>
   .site-header {
@@ -99,6 +151,42 @@ function isActive(href: string) {
   .nav-link.active {
     color: var(--fg);
     border-bottom-color: var(--fg);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .lang-switch select {
+    appearance: none;
+    -webkit-appearance: none;
+    font: inherit;
+    font-size: 0.8125rem;
+    color: var(--fg-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: var(--space-1) var(--space-5) var(--space-1) var(--space-2);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-2) center;
+  }
+
+  .lang-switch select:hover {
+    color: var(--fg);
+    border-color: var(--fg-subtle);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   @media (max-width: 720px) {

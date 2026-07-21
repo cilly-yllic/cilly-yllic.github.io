@@ -25,9 +25,28 @@ interface Props extends Partial<GiscusConfig> {
   term: string;
   /** ルート要素へ付与する追加クラス */
   class?: string;
+  /** UI 文言と giscus ウィジェットの言語 (既定: ja) */
+  locale?: 'ja' | 'en';
 }
 
-const { term, class: className, ...overrides } = Astro.props;
+const { term, class: className, locale = 'ja', ...overrides } = Astro.props;
+
+const t =
+  locale === 'en'
+    ? {
+        heading: 'Comments',
+        loading: 'Loading comments…',
+        fallbackPrefix: 'If the widget does not load, ',
+        fallbackLink: 'open on GitHub ↗',
+        placeholder: 'Comments are coming soon.',
+      }
+    : {
+        heading: 'コメント',
+        loading: 'コメントを読み込んでいます…',
+        fallbackPrefix: 'コメントできない場合は',
+        fallbackLink: 'GitHub で開く ↗',
+        placeholder: 'コメント機能は現在準備中です。',
+      };
 
 // 既定値(GISCUS_CONFIG)を props で部分的に上書き。
 const config: GiscusConfig = {
@@ -40,7 +59,7 @@ const config: GiscusConfig = {
   reactionsEnabled: overrides.reactionsEnabled ?? GISCUS_CONFIG.reactionsEnabled,
   emitMetadata: overrides.emitMetadata ?? GISCUS_CONFIG.emitMetadata,
   inputPosition: overrides.inputPosition ?? GISCUS_CONFIG.inputPosition,
-  lang: overrides.lang ?? GISCUS_CONFIG.lang,
+  lang: overrides.lang ?? (locale === 'en' ? 'en' : GISCUS_CONFIG.lang),
 };
 
 const configured = isGiscusConfigured(config);
@@ -52,7 +71,7 @@ const discussionsFallbackUrl = `https://github.com/${config.repo}/discussions?di
 ---
 
 <section class:list={['comments', className]} aria-labelledby="comments-heading">
-  <h2 id="comments-heading" class="comments__heading">コメント</h2>
+  <h2 id="comments-heading" class="comments__heading">{t.heading}</h2>
 
   {
     configured ? (
@@ -75,24 +94,24 @@ const discussionsFallbackUrl = `https://github.com/${config.repo}/discussions?di
         data-lang={config.lang}
       >
         <p class="comments__status" role="status">
-          コメントを読み込んでいます…
+          {t.loading}
         </p>
       </div>
       <p class="comments__fallback">
-        コメントできない場合は
+        {t.fallbackPrefix}
         <a
           data-giscus-link
           href={discussionsFallbackUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
-          GitHub で開く ↗
+          {t.fallbackLink}
         </a>
       </p>
       </Fragment>
     ) : (
       <p class="comments__placeholder" role="note">
-        コメント機能は現在準備中です。
+        {t.placeholder}
       </p>
     )
   }

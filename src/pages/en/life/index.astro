@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import StatusCard from '../../../components/StatusCard.astro';
+import heroImage from '../../../assets/life/hero.jpg';
+
+interface Category {
+  title: string;
+  description: string;
+  status: 'Available' | 'Coming Soon' | 'Planned' | 'Archived';
+  href?: string;
+}
+
+const categories: Category[] = [
+  {
+    title: 'Gallery',
+    description: 'A photo dump. Pictures I took, arranged as they come.',
+    status: 'Available',
+    href: '/en/life/gallery/',
+  },
+];
+---
+
+<BaseLayout
+  title="Life · cilly"
+  description="Interests and hobbies outside of code — the non-engineering pages."
+>
+  <div class="hero">
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[760, 1200]}
+      sizes="(max-width: 760px) 100vw, 720px"
+      loading="eager"
+    />
+  </div>
+
+  <header class="page-header">
+    <p class="eyebrow">Life</p>
+    <h1>Life</h1>
+    <p class="lead">Interests outside of code, organized by category.</p>
+  </header>
+
+  <div class="card-list">
+    {
+      categories.map((c) => (
+        <StatusCard title={c.title} description={c.description} status={c.status} href={c.href} />
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--space-8);
+  }
+
+  .hero :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+</style>

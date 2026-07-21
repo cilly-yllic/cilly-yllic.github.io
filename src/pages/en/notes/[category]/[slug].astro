@@ -1,13 +1,13 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Giscus from '../../../components/Giscus.astro';
-import { CATEGORIES } from '../../../content.config';
-import { termForNote } from '../../../config/giscus';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Giscus from '../../../../components/Giscus.astro';
+import { categoryTitle as categoryTitleFor } from '../../../../content.config';
+import { termForNote } from '../../../../config/giscus';
 
 export const getStaticPaths = (async () => {
-  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  const notes = await getCollection('notesEn', ({ data }) => !data.draft);
   return notes.map((note) => {
     const [category, slug] = note.id.split('/');
     return {
@@ -20,12 +20,11 @@ export const getStaticPaths = (async () => {
 const { note } = Astro.props;
 const { Content } = await render(note);
 
-// 英語版が存在すれば、言語プルダウン・hreflang をそのページへ向ける
-const enNotes = await getCollection('notesEn', ({ data }) => !data.draft);
-const altUrl = enNotes.some((n) => n.id === note.id) ? `/en/notes/${note.id}/` : null;
+// 日本語版が存在すれば、言語プルダウン・hreflang をそのページへ向ける
+const jaNotes = await getCollection('notes', ({ data }) => !data.draft);
+const altUrl = jaNotes.some((n) => n.id === note.id) ? `/notes/${note.id}/` : null;
 
-const categoryTitle =
-  CATEGORIES.find((c) => c.slug === note.data.category)?.title ?? note.data.category;
+const categoryTitle = categoryTitleFor(note.data.category, 'en');
 const date = note.data.publishedAt.toISOString().slice(0, 10);
 const updated = note.data.updatedAt?.toISOString().slice(0, 10);
 
@@ -47,6 +46,7 @@ const ldJson = {
   },
   image: ogImage,
   url: canonical,
+  inLanguage: 'en',
   mainEntityOfPage: {
     '@type': 'WebPage',
     '@id': canonical,
@@ -76,7 +76,7 @@ const ldJson = {
         {
           altUrl && (
             <a class="lang-link" href={altUrl}>
-              Read in English
+              日本語版を読む
             </a>
           )
         }
@@ -87,7 +87,7 @@ const ldJson = {
       <Content />
     </div>
 
-    <Giscus term={termForNote(note.id)} />
+    <Giscus term={termForNote(`en/${note.id}`)} locale="en" />
   </article>
 </BaseLayout>
 

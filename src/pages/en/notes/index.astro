@@ -1,0 +1,177 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { CATEGORIES, type CategorySlug } from '../../../content.config';
+import { termForNote } from '../../../config/giscus';
+import { getDiscussionStats } from '../../../lib/discussions';
+import heroImage from '../../../assets/notes-hero.png';
+
+const allNotes = await getCollection('notesEn', ({ data }) => !data.draft);
+const sorted = allNotes.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const stats = await getDiscussionStats();
+
+function entryHref(id: string) {
+  return `/en/notes/${id}/`;
+}
+
+function countByCategory(slug: CategorySlug) {
+  return allNotes.filter((n) => n.data.category === slug).length;
+}
+
+// 本文 markdown から最初の画像（![alt](src)）を取り出す
+function firstImage(body?: string) {
+  const m = body?.match(/!\[([^\]]*)\]\(([^)\s]+)/);
+  return m ? { src: m[2], alt: m[1] } : null;
+}
+---
+
+<BaseLayout
+  title="Architecture Notes · cilly"
+  description="Articles on engineering and design philosophy. Firebase / GCP."
+>
+  <div class="hero">
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[760, 1200]}
+      sizes="(max-width: 760px) 100vw, 720px"
+      loading="eager"
+    />
+  </div>
+
+  <header class="page-header">
+    <p class="eyebrow">Architecture Notes</p>
+    <h1>Notes</h1>
+    <p class="lead">
+      Design decisions, verification results, and engineering philosophy — concrete problems that
+      come up in day-to-day implementation, and the abstract discussions behind them.
+    </p>
+    <p class="translation-note">
+      Selected articles from the <a href="/notes/">Japanese notes</a>, translated into English.
+    </p>
+  </header>
+
+  <section class="categories">
+    <h2>Categories</h2>
+    <ul class="category-list">
+      {
+        CATEGORIES.map((cat) => (
+          <li>
+            <a href={`/en/notes/${cat.slug}/`}>{cat.titleEn}</a>
+            <span class="count">{countByCategory(cat.slug)}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="articles">
+    <h2>All Articles</h2>
+    <div class="card-list">
+      {
+        sorted.map((note) => {
+          const img = firstImage(note.body);
+          const stat = stats.get(termForNote(`en/${note.id}`));
+          return (
+            <ArticleCard
+              title={note.data.title}
+              description={note.data.description}
+              category={note.data.category}
+              publishedAt={note.data.publishedAt}
+              href={entryHref(note.id)}
+              image={img?.src}
+              imageAlt={img?.alt}
+              locale="en"
+              commentCount={stat?.comments}
+              reactionCount={stat?.reactions}
+            />
+          );
+        })
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--space-8);
+  }
+
+  .hero :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-16);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .translation-note {
+    margin: var(--space-4) 0 0;
+    font-size: 0.875rem;
+    color: var(--fg-subtle);
+  }
+
+  .categories {
+    margin-bottom: var(--space-16);
+  }
+
+  .card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .category-list li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .count {
+    color: var(--fg-subtle);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

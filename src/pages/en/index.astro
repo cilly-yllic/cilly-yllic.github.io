@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import Skills from '../../components/Skills.astro';
+import ExternalLinks from '../../components/ExternalLinks.astro';
+
+const skillCategories = [
+  {
+    name: 'Languages',
+    items: ['TypeScript', 'PHP'],
+  },
+  {
+    name: 'Frontend',
+    items: ['Next.js', 'Nuxt.js', 'Vue.js', 'Angular', 'Mapbox'],
+  },
+  {
+    name: 'Backend',
+    items: ['NestJS', 'Node.js'],
+  },
+  {
+    name: 'Infrastructure',
+    items: ['Google Cloud', 'Firebase', 'Terraform', 'Docker', 'GitHub Actions'],
+  },
+  {
+    name: 'Architecture',
+    items: ['Nx', 'Turborepo', 'Event-driven', 'Multi-tenant'],
+  },
+  {
+    name: 'AI Integration',
+    items: ['LLM-assisted Workflows', 'AI Coding Pipelines'],
+  },
+  {
+    name: 'Realtime Systems',
+    items: ['Firestore', 'Cloud Tasks', 'Reconciliation'],
+  },
+  {
+    name: 'Search / Data',
+    items: ['OpenSearch', 'Algolia', 'MySQL', 'PostgreSQL', 'Redis', 'BigQuery'],
+  },
+];
+
+const externalLinks = [
+  { label: 'GitHub', href: 'https://github.com/cilly-yllic', external: true },
+  { label: 'Facebook', href: 'https://www.facebook.com/A3itEdxN', external: true },
+  { label: 'Wantedly', href: 'https://www.wantedly.com/id/cilly', external: true },
+];
+---
+
+<BaseLayout>
+  <Hero
+    name="cilly"
+    eyebrow="Full-cycle Web Engineer"
+    tagline="Building scalable architecture, AI-integrated systems, and product-oriented software — from infrastructure to interface."
+    image="/og-image.png"
+    imageAlt="cilly mascot — a focused dog coding at a laptop surrounded by plan, build, and test notes"
+    ctas={[
+      { label: 'Read the notes', href: '/en/notes/' },
+      { label: 'Open source', href: '/en/oss/' },
+    ]}
+  />
+  <Skills categories={skillCategories} />
+  <ExternalLinks title="Elsewhere" links={externalLinks} />
+</BaseLayout>

@@ -5,25 +5,41 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import AnalyticsEvents from '../components/AnalyticsEvents.astro';
+import { getLocaleFromPath, altPath } from '../i18n';
 
 interface Props {
   title?: string;
   description?: string;
   ogType?: 'website' | 'article';
+  /**
+   * 反対言語での同一ページのパス。
+   * - 未指定: 全サイト共通ページとして altPath() で自動導出する (対応ページが常に存在する前提)
+   * - null: 対応ページが存在しない (未翻訳記事など)。プルダウンはセクションのトップへフォールバックし、
+   *   hreflang と自動リダイレクトは無効になる
+   */
+  altUrl?: string | null;
 }
+
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 const {
   title = 'cilly',
   description = 'Full-cycle web engineer focused on scalable architecture, AI-integrated systems, and product-oriented development.',
   ogType = 'website',
+  altUrl = altPath(Astro.url.pathname),
 } = Astro.props;
 
 const ogImage = new URL('/og-image.png', Astro.site).toString();
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const altLocale = locale === 'ja' ? 'en' : 'ja';
+const altAbsolute = altUrl ? new URL(altUrl, Astro.site).toString() : null;
+
+const rssHref = locale === 'en' ? '/en/notes/rss.xml' : '/notes/rss.xml';
+const rssTitle = locale === 'en' ? 'cilly — Architecture Notes (EN)' : 'cilly — Architecture Notes';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale} data-locale={locale} data-alt-url={altUrl ?? undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,17 +50,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {altAbsolute && <link rel="alternate" hreflang={altLocale} href={altAbsolute} />}
+    {altAbsolute && <link rel="alternate" hreflang={locale} href={canonical} />}
+    {
+      altAbsolute && (
+        <link rel="alternate" hreflang="x-default" href={locale === 'ja' ? canonical : altAbsolute} />
+      )
+    }
 
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="cilly — Architecture Notes"
-      href="/notes/rss.xml"
-    />
+    <link rel="alternate" type="application/rss+xml" title={rssTitle} href={rssHref} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
@@ -69,10 +87,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       })();
     </script>
 
+    <script is:inline>
+      // 言語設定の引き継ぎ: ヘッダーのプルダウンで選んだ言語 (localStorage.locale) と
+      // 表示中ページの言語が違い、かつ対応ページ (data-alt-url) が存在する場合だけ
+      // そちらへ移動する。描画前に実行して FOUC を避ける。
+      (() => {
+        const preferred = localStorage.getItem('locale');
+        if (preferred !== 'ja' && preferred !== 'en') return;
+        const { locale, altUrl } = document.documentElement.dataset;
+        if (locale && altUrl && preferred !== locale) {
+          location.replace(altUrl);
+        }
+      })();
+    </script>
+
     <slot name="head" />
   </head>
   <body>
-    <SiteHeader />
+    <SiteHeader altUrl={altUrl} />
     <main>
       <slot />
     </main>

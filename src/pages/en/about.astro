@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import HeroMedia from '../../components/HeroMedia.astro';
+import heroImage from '../../assets/life/gallery/007.jpg';
+
+const interests = [
+  'Distributed Systems',
+  'Event-driven Architecture',
+  'Realtime Systems',
+  'Search Infrastructure',
+  'AI-assisted Development',
+  'Product Architecture',
+];
+
+// 興味タグの色（index 順に割り当て）。color-mix でテーマに馴染ませる
+const tagColors = [
+  '#1c7ed6', // blue
+  '#0ca678', // teal
+  '#7048e8', // violet
+  '#e8590c', // orange
+  '#2f9e44', // green
+  '#e64980', // pink
+];
+
+const values = [
+  {
+    name: 'Maintainability',
+    detail:
+      'Code should be understandable by someone else six months later, and I should be able to explain the intent when I reread it myself.',
+  },
+  {
+    name: 'Scalability',
+    detail:
+      'Design so that you can tell in advance where the bottleneck will be when users and data grow.',
+  },
+  {
+    name: 'Readability',
+    detail:
+      'Prioritize long-term readability and ease of change over short-term implementation speed.',
+  },
+  {
+    name: 'Explicit Architecture',
+    detail:
+      'Make responsibilities, data boundaries, sync direction, and update ownership explicit — never rely on tribal knowledge.',
+  },
+  {
+    name: 'Operational Simplicity',
+    detail:
+      'Anything that gets complicated in operation should be reconsidered at design time. Complexity costs more the later it surfaces.',
+  },
+];
+---
+
+<BaseLayout
+  title="About · cilly"
+  description="Areas of interest and design principles as an engineer."
+>
+  <HeroMedia image={heroImage} />
+
+  <header class="page-header">
+    <p class="eyebrow">About</p>
+    <h1>About me</h1>
+    <p class="lead">
+      A web engineer working across frontend, backend, and data-sync design, mostly in TypeScript.
+      Experienced in 0→1 product development and operational improvement, with a focus on realtime
+      behavior, consistency, and maintainability.
+    </p>
+  </header>
+
+  <Section title="Interests">
+    <ul class="tag-list">
+      {
+        interests.map((item, i) => (
+          <li class="tag" style={`--tag: ${tagColors[i % tagColors.length]}`}>
+            {item}
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section title="What I value">
+    <dl class="values">
+      {
+        values.map((v) => (
+          <div class="value-row">
+            <dt>{v.name}</dt>
+            <dd>{v.detail}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-16);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .tag {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--tag) 12%, var(--bg));
+    border: 1px solid color-mix(in srgb, var(--tag) 32%, transparent);
+    color: color-mix(in srgb, var(--tag), var(--fg) 28%);
+  }
+
+  .values {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .value-row {
+    border-left: 2px solid var(--border);
+    padding-left: var(--space-4);
+  }
+
+  dt {
+    color: var(--fg);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-2);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+</style>

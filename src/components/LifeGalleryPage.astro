@@ -1,0 +1,354 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image, getImage } from 'astro:assets';
+import { localePath, type Locale } from '../i18n';
+
+// ─────────────────────────────────────────────────────────────
+// 写真置き場ページの本体 (日英共通)。
+// src/assets/life/gallery/ に画像 (jpg/png/webp/avif) を入れるだけで
+// ここに自動で並びます。ファイル名順で表示されます。
+// サムネのクリックでライトボックス（モーダル）が開きます。
+// 文言だけ locale で切り替え、ページ本体は pages/life/gallery.astro と
+// pages/en/life/gallery.astro の両方から使う。
+// ─────────────────────────────────────────────────────────────
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'ja' } = Astro.props;
+
+const t =
+  locale === 'en'
+    ? {
+        description: 'A photo dump. Pictures I took, arranged as they come.',
+        lead: 'A photo dump. Pictures I took, arranged as they come.',
+        zoom: (i: number) => `View photo ${i} in full size`,
+        placeholderPrefix: 'Nothing here yet. Drop images into ',
+        placeholderSuffix: ' and they will show up here.',
+        viewer: 'Photo viewer',
+        close: 'Close',
+        prev: 'Previous photo',
+        next: 'Next photo',
+      }
+    : {
+        description: '写真置き場。撮った写真を気ままに並べる場所。',
+        lead: '写真置き場。撮った写真を気ままに並べています。',
+        zoom: (i: number) => `写真 ${i} を拡大表示`,
+        placeholderPrefix: '準備中。',
+        placeholderSuffix: ' に画像を入れると、ここに並びます。',
+        viewer: '写真ビューア',
+        close: '閉じる',
+        prev: '前の写真',
+        next: '次の写真',
+      };
+
+const modules = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/life/gallery/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}',
+  { eager: true }
+);
+
+const photos = await Promise.all(
+  Object.entries(modules)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(async ([path, mod]) => {
+      const img = mod.default;
+      // モーダル表示用の最適化版（元画像より大きくはしない）
+      const full = await getImage({
+        src: img,
+        width: Math.min(1600, img.width),
+        format: 'webp',
+      });
+      return {
+        src: img,
+        full: full.src,
+        name: path.split('/').pop() ?? '',
+      };
+    })
+);
+---
+
+<BaseLayout title="Gallery · Life · cilly" description={t.description}>
+  <header class="page-header">
+    <p class="eyebrow">
+      <a href={localePath(locale, '/life/')}>Life</a> / Gallery
+    </p>
+    <h1>Gallery</h1>
+    <p class="lead">{t.lead}</p>
+  </header>
+
+  {
+    photos.length > 0 ? (
+      <ul class="grid">
+        {photos.map((photo, i) => (
+          <li class="cell">
+            <button
+              type="button"
+              class="thumb"
+              data-full={photo.full}
+              aria-label={t.zoom(i + 1)}
+            >
+              <Image
+                src={photo.src}
+                alt=""
+                widths={[300, 600]}
+                sizes="(max-width: 560px) 45vw, 220px"
+                loading="lazy"
+              />
+            </button>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="placeholder">
+        {t.placeholderPrefix}
+        <code>src/assets/life/gallery/</code>
+        {t.placeholderSuffix}
+      </p>
+    )
+  }
+
+  {
+    photos.length > 0 && (
+      <div
+        class="lightbox"
+        id="lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t.viewer}
+        hidden
+      >
+        <button class="lightbox__close" data-close aria-label={t.close}>
+          ×
+        </button>
+        <button class="lightbox__nav lightbox__prev" data-prev aria-label={t.prev}>
+          ‹
+        </button>
+        <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+        <button class="lightbox__nav lightbox__next" data-next aria-label={t.next}>
+          ›
+        </button>
+      </div>
+    )
+  }
+</BaseLayout>
+
+<script>
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
+
+  if (lb && img) {
+    const thumbs = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('.thumb[data-full]')
+    );
+    const srcs = thumbs.map((t) => t.dataset.full ?? '');
+    let idx = -1;
+    let lastFocused: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      idx = (i + srcs.length) % srcs.length;
+      img.src = srcs[idx];
+    };
+
+    const open = (i: number) => {
+      lastFocused = document.activeElement as HTMLElement | null;
+      show(i);
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+      (lb.querySelector('[data-close]') as HTMLElement | null)?.focus();
+    };
+
+    const close = () => {
+      lb.hidden = true;
+      img.src = '';
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+    };
+
+    thumbs.forEach((t, i) => t.addEventListener('click', () => open(i)));
+    lb.querySelector('[data-close]')?.addEventListener('click', close);
+    lb.querySelector('[data-prev]')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      show(idx - 1);
+    });
+    lb.querySelector('[data-next]')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      show(idx + 1);
+    });
+    // 背景（画像以外）クリックで閉じる
+    lb.addEventListener('click', (e) => {
+      if (e.target === lb) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(idx - 1);
+      else if (e.key === 'ArrowRight') show(idx + 1);
+    });
+  }
+</script>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .eyebrow a {
+    color: var(--fg-subtle);
+    text-decoration: none;
+  }
+
+  .eyebrow a:hover {
+    color: var(--fg);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .thumb:hover {
+    border-color: var(--border-strong);
+  }
+
+  .thumb :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .thumb:hover :global(img) {
+    transform: scale(1.04);
+  }
+
+  .placeholder {
+    color: var(--fg-subtle);
+    font-size: 0.9375rem;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    background: rgba(0, 0, 0, 0.88);
+    animation: lightbox-fade 0.18s ease;
+  }
+
+  /* `hidden` 属性が display:flex に負けないように明示 */
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox__img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .lightbox__close,
+  .lightbox__nav {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s ease;
+  }
+
+  .lightbox__close:hover,
+  .lightbox__nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox__close {
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.6rem;
+  }
+
+  .lightbox__nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+  }
+
+  .lightbox__prev {
+    left: var(--space-4);
+  }
+
+  .lightbox__next {
+    right: var(--space-4);
+  }
+
+  @keyframes lightbox-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .lightbox__nav {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.6rem;
+    }
+  }
+</style>

@@ -1,5 +1,15 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { getLocaleFromPath, localePath, LOCALES } from '../i18n';
+
+interface Props {
+  /** 反対言語での同一ページのパス。null なら未翻訳 (プルダウンはセクショントップへ) */
+  altUrl?: string | null;
+}
+
+const { altUrl = null } = Astro.props;
+
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 const nav = [
   { label: 'Notes', href: '/notes/' },
@@ -11,15 +21,18 @@ const nav = [
 
 const currentPath = Astro.url.pathname;
 
-function isActive(href: string) {
-  if (href === '/') return currentPath === '/';
+function isActive(jaHref: string) {
+  const href = localePath(locale, jaHref);
+  if (href === '/' || href === '/en/') return currentPath === href;
   return currentPath === href || currentPath.startsWith(href);
 }
+
+const home = localePath(locale, '/');
 ---
 
 <header class="site-header">
   <div class="inner">
-    <a href="/" class="brand" aria-label="cilly, home">cilly</a>
+    <a href={home} class="brand" aria-label="cilly, home">cilly</a>
 
     <nav aria-label="Primary">
       <ul>
@@ -27,7 +40,7 @@ function isActive(href: string) {
           nav.map((item) => (
             <li>
               <a
-                href={item.href}
+                href={localePath(locale, item.href)}
                 class:list={['nav-link', { active: isActive(item.href) }]}
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
@@ -40,10 +53,54 @@ function isActive(href: string) {
     </nav>
 
     <div class="actions">
+      <div class="lang-switch" role="radiogroup" aria-label="Language" data-alt-url={altUrl ?? undefined}>
+        {
+          LOCALES.map((l) => (
+            <button
+              type="button"
+              role="radio"
+              aria-checked={l === locale ? 'true' : 'false'}
+              data-lang-value={l}
+              aria-label={l === 'ja' ? '日本語' : 'English'}
+            >
+              {l.toUpperCase()}
+            </button>
+          ))
+        }
+      </div>
       <ThemeToggle />
     </div>
   </div>
 </header>
+
+<script>
+  // 言語トグル: 選択を localStorage に保存し、反対言語の対応ページへ遷移する。
+  // 対応ページが無い (data-alt-url 無し = 未翻訳記事など) 場合は Notes 一覧へフォールバック。
+  const group = document.querySelector<HTMLElement>('.lang-switch');
+  if (group) {
+    group.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-lang-value]');
+      if (!btn) return;
+      const target = btn.dataset.langValue!;
+      localStorage.setItem('locale', target);
+
+      const current = document.documentElement.dataset.locale;
+      if (target === current) return;
+
+      const altUrl = group.dataset.altUrl;
+      if (altUrl) {
+        location.href = altUrl;
+        return;
+      }
+      const inNotes = location.pathname.includes('/notes/');
+      if (target === 'en') {
+        location.href = inNotes ? '/en/notes/' : '/en/';
+      } else {
+        location.href = inNotes ? '/notes/' : '/';
+      }
+    });
+  }
+</script>
 
 <style>
   .site-header {
@@ -99,6 +156,47 @@ function isActive(href: string) {
   .nav-link.active {
     color: var(--fg);
     border-bottom-color: var(--fg);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  /* ThemeToggle と同じセグメント型ピルに揃える */
+  .lang-switch {
+    display: inline-flex;
+    gap: 0;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+  }
+
+  .lang-switch button {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.75rem;
+    color: var(--fg-subtle);
+    cursor: pointer;
+    border-radius: calc(var(--radius-md) - 2px);
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .lang-switch button:hover {
+    color: var(--fg);
+  }
+
+  .lang-switch button[aria-checked='true'] {
+    background: var(--bg-elevated);
+    color: var(--fg);
   }
 
   @media (max-width: 720px) {

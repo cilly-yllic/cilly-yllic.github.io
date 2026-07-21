@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroMedia from '../../components/HeroMedia.astro';
+import heroImage from '../../assets/life/gallery/012.jpg';
+
+interface ContactItem {
+  channel: string;
+  href: string;
+  detail: string;
+  external?: boolean;
+}
+
+const items: ContactItem[] = [
+  {
+    channel: 'GitHub',
+    href: 'https://github.com/cilly-yllic',
+    detail: 'Code, libraries, and the source of this site.',
+    external: true,
+  },
+  {
+    channel: 'Facebook',
+    href: 'https://www.facebook.com/A3itEdxN',
+    detail: 'For personal messages.',
+    external: true,
+  },
+  {
+    channel: 'Wantedly',
+    href: 'https://www.wantedly.com/id/cilly',
+    detail: 'For career-related inquiries.',
+    external: true,
+  },
+  {
+    channel: 'Qiita',
+    href: 'https://qiita.com/cilly',
+    detail: 'Posted a little while working as a full-time employee (Japanese).',
+    external: true,
+  },
+  {
+    channel: 'Business Inquiry',
+    href: 'https://mooodone.com/',
+    detail:
+      'For contract work, technical advisory, and architecture reviews. Including the scope, timeline, and expected deliverables up front makes things move faster.',
+    external: true,
+  },
+];
+---
+
+<BaseLayout title="Contact · cilly" description="Contact channels and business inquiries.">
+  <HeroMedia image={heroImage} />
+
+  <header class="page-header">
+    <p class="eyebrow">Contact</p>
+    <h1>Get in touch</h1>
+    <p class="lead">
+      Technical work and the source of this site are on GitHub. Personal messages via Facebook,
+      career topics via Wantedly, and contract work via Business Inquiry.
+    </p>
+  </header>
+
+  <dl class="contact-list">
+    {
+      items.map((item) => (
+        <div class="row">
+          <dt>{item.channel}</dt>
+          <dd>
+            <a
+              href={item.href}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+            >
+              {item.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+            </a>
+            <p class="detail">{item.detail}</p>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .contact-list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .row:last-child {
+    border-bottom: none;
+  }
+
+  dt {
+    font-size: 0.875rem;
+    color: var(--fg-subtle);
+    font-weight: 500;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  dd a {
+    word-break: break-all;
+  }
+
+  .detail {
+    margin: var(--space-2) 0 0;
+    color: var(--fg-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+</style>

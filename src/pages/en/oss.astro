@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import OssCard from '../../components/OssCard.astro';
+import heroImage from '../../assets/life/gallery/013.jpg';
+
+interface OssItem {
+  title: string;
+  description: string;
+  status: 'Available' | 'Coming Soon' | 'Planned' | 'Archived';
+  href?: string;
+}
+
+const items: OssItem[] = [
+  {
+    title: '.llm',
+    description:
+      'A repository for sharing configs, prompts, and workflows for AI coding agents.',
+    status: 'Available',
+    href: 'https://github.com/cilly-yllic/.llm',
+  },
+  {
+    title: 'terraform-google-platform',
+    description:
+      'Terraform modules for config-driven provisioning of GCP / Firebase project platforms.',
+    status: 'Available',
+    href: 'https://github.com/cilly-yllic/terraform-google-platform',
+  },
+  {
+    title: 'npm (@cilly)',
+    description: 'Ideas around automation and developer productivity, published as packages.',
+    status: 'Available',
+    href: 'https://www.npmjs.com/~cilly',
+  },
+];
+---
+
+<BaseLayout title="OSS · cilly" description="Published libraries and tools.">
+  <div class="hero">
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[760, 1200]}
+      sizes="(max-width: 760px) 100vw, 720px"
+      loading="eager"
+    />
+  </div>
+
+  <header class="page-header">
+    <p class="eyebrow">Open Source</p>
+    <h1>OSS</h1>
+    <p class="lead">
+      Libraries and tools born from moments of "I want this in other projects too", generalized and
+      published.
+    </p>
+  </header>
+
+  <div class="card-list">
+    {
+      items.map((item) => (
+        <OssCard
+          title={item.title}
+          description={item.description}
+          status={item.status}
+          href={item.href}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--space-8);
+  }
+
+  .hero :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    margin: 0 0 var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.0625rem;
+    color: var(--fg);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-4);
+  }
+</style>

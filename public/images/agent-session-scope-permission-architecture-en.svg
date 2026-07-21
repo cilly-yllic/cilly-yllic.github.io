@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="ui-sans-serif, system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif" role="img" aria-label="Diagram: a session declares scope and permissions, handling multiple repositories with different permission levels">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="760" height="470" rx="10" fill="#faf9f7"/>
+
+  <!-- title -->
+  <text x="380" y="34" text-anchor="middle" font-size="16" font-weight="700" fill="#27272a">A session = a declaration of scope + permissions</text>
+
+  <!-- parent -->
+  <rect x="90" y="52" width="360" height="50" rx="8" fill="#eef2ff" stroke="#6366f1" stroke-width="1.2"/>
+  <text x="270" y="73" text-anchor="middle" font-size="13" font-weight="700" fill="#3730a3">Parent directory</text>
+  <text x="270" y="91" text-anchor="middle" font-size="11" fill="#4f46e5">Defines scope + permissions → spawns / reconfigures sessions</text>
+
+  <!-- arrow parent -> session -->
+  <path d="M250,102 L250,138" fill="none" stroke="#52525b" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="262" y="124" font-size="10.5" fill="#71717a">spawn</text>
+
+  <!-- session -->
+  <rect x="70" y="140" width="350" height="210" rx="10" fill="#ffffff" stroke="#d4d4d8" stroke-width="1.4"/>
+  <text x="90" y="166" font-size="13.5" font-weight="700" fill="#27272a">Session (one unit of work)</text>
+
+  <!-- manifest card -->
+  <rect x="90" y="180" width="310" height="96" rx="7" fill="#f4f4f5" stroke="#e4e4e7"/>
+  <text x="104" y="200" font-size="11.5" font-weight="700" fill="#3f3f46">manifest (declaration)</text>
+  <text x="104" y="222" font-size="11.5" fill="#52525b">Target repo → permission, all on one sheet</text>
+  <text x="104" y="242" font-size="11" fill="#71717a">repoA → read</text>
+  <text x="104" y="259" font-size="11" fill="#71717a">repoB → write-local&#160;&#160;&#160;repoC → write-push</text>
+
+  <!-- self-constraint note -->
+  <text x="90" y="302" font-size="11" fill="#b91c1c">⊘ Permission definitions cannot be changed from inside the session</text>
+  <text x="90" y="322" font-size="11" fill="#52525b">(path-scoped deny: only the definition files are locked)</text>
+  <text x="90" y="340" font-size="11" fill="#52525b">Work logs and session areas stay writable</text>
+
+  <!-- scope gate (dashed) -->
+  <line x1="455" y1="118" x2="455" y2="372" stroke="#a1a1aa" stroke-width="1.3" stroke-dasharray="5 4"/>
+  <text x="455" y="392" text-anchor="middle" font-size="10.5" fill="#71717a">Scope boundary: only targets listed in additionalDirectories are visible</text>
+
+  <!-- target repos -->
+  <!-- read -->
+  <rect x="520" y="120" width="210" height="54" rx="8" fill="#ffffff" stroke="#d4d4d8"/>
+  <rect x="534" y="134" width="74" height="20" rx="10" fill="#e2e8f0"/>
+  <text x="571" y="148" text-anchor="middle" font-size="10.5" font-weight="700" fill="#475569">read</text>
+  <text x="648" y="148" text-anchor="middle" font-size="11" fill="#3f3f46">repoA</text>
+  <text x="625" y="166" text-anchor="middle" font-size="10.5" fill="#71717a">reference only</text>
+
+  <!-- write-local -->
+  <rect x="520" y="200" width="210" height="54" rx="8" fill="#ffffff" stroke="#d4d4d8"/>
+  <rect x="534" y="214" width="96" height="20" rx="10" fill="#fef3c7"/>
+  <text x="582" y="228" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b45309">write-local</text>
+  <text x="660" y="228" text-anchor="middle" font-size="11" fill="#3f3f46">repoB</text>
+  <text x="625" y="246" text-anchor="middle" font-size="10.5" fill="#71717a">edit + local commits (no push)</text>
+
+  <!-- write-push -->
+  <rect x="520" y="280" width="210" height="54" rx="8" fill="#ffffff" stroke="#d4d4d8"/>
+  <rect x="534" y="294" width="96" height="20" rx="10" fill="#d1fae5"/>
+  <text x="582" y="308" text-anchor="middle" font-size="10.5" font-weight="700" fill="#047857">write-push</text>
+  <text x="660" y="308" text-anchor="middle" font-size="11" fill="#3f3f46">repoC</text>
+  <text x="625" y="326" text-anchor="middle" font-size="10.5" fill="#71717a">push / PR (no direct push to main)</text>
+
+  <!-- arrows session -> repos -->
+  <path d="M420,186 C470,170 480,147 518,147" fill="none" stroke="#52525b" stroke-width="1.3" marker-end="url(#arrow)"/>
+  <path d="M420,228 L518,227" fill="none" stroke="#52525b" stroke-width="1.3" marker-end="url(#arrow)"/>
+  <path d="M420,250 C470,270 480,305 518,307" fill="none" stroke="#52525b" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+  <!-- push guard marker -->
+  <g>
+    <rect x="486" y="246" width="18" height="16" rx="3" fill="#fee2e2" stroke="#dc2626" stroke-width="1.1"/>
+    <path d="M490,246 v-3 a5,5 0 0 1 10,0 v3" fill="none" stroke="#dc2626" stroke-width="1.1"/>
+  </g>
+  <text x="380" y="432" text-anchor="middle" font-size="10.5" fill="#b91c1c">🔒 push-guard: a pre-execution hook maps push target path → permission and blocks unauthorized pushes</text>
+  <text x="380" y="450" text-anchor="middle" font-size="10.5" fill="#71717a">Even in cross-repo work, a "read-only repository" structurally cannot be modified</text>
+</svg>

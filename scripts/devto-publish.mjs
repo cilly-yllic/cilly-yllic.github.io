@@ -61,7 +61,8 @@ const request = async (method, path, body) => {
   throw new Error(`still rate limited after retries: ${method} ${path}`);
 };
 
-// 既存記事の canonical_url → id の対応表 (下書きも含むので /articles/me/all を使う)
+// 既存記事の canonical_url → { id, body } の対応表 (下書きも含むので /articles/me/all を使う)
+// body_markdown は投稿した原文がそのまま返るので、変更なしの判定にも使う
 const fetchExisting = async () => {
   const map = new Map();
   for (let page = 1; page <= 10; page++) {
@@ -69,7 +70,7 @@ const fetchExisting = async () => {
     if (!res.ok) throw new Error(`failed to list articles: ${res.status} ${await res.text()}`);
     const articles = await res.json();
     for (const a of articles) {
-      if (a.canonical_url) map.set(a.canonical_url, a.id);
+      if (a.canonical_url) map.set(a.canonical_url, { id: a.id, body: a.body_markdown ?? '' });
     }
     if (articles.length < 100) break;
   }
@@ -97,15 +98,21 @@ for (const file of files) {
     continue;
   }
 
-  const id = existing.get(canonical);
-  const action = id ? `update (id: ${id})` : 'create';
+  const found = existing.get(canonical);
+  const action = found ? `update (id: ${found.id})` : 'create';
   if (DRY_RUN) {
     console.log(`[dry-run] ${action}: ${title} (${canonical})`);
     continue;
   }
 
-  const res = id
-    ? await request('PUT', `/articles/${id}`, { article: { body_markdown: markdown } })
+  // 内容が dev.to 上の原文と同一なら何もしない (編集日時を無駄に動かさない)
+  if (found && found.body.trim() === markdown.trim()) {
+    console.log(`- skip (unchanged): ${title}`);
+    continue;
+  }
+
+  const res = found
+    ? await request('PUT', `/articles/${found.id}`, { article: { body_markdown: markdown } })
     : await request('POST', '/articles', { article: { body_markdown: markdown } });
 
   if (res.ok) {

@@ -1,0 +1,33 @@
+name: Publish to dev.to
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'devto/articles/**'
+      - 'scripts/devto-publish.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 'devto-publish'
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Publish articles to dev.to
+        run: node scripts/devto-publish.mjs
+        env:
+          DEV_TO_API_KEY: ${{ secrets.DEV_COMMUNITY_API_KEY }}

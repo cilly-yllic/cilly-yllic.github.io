@@ -1,6 +1,6 @@
 ---
 title: "Generating every Firebase layer’s types from a single contract.yml"
-published: false
+published: true
 description: "One YAML contract as the source of truth — generating TypeScript, Zod, GraphQL, Firestore projections and API DTOs, drift caught in CI."
 tags: typescript, firebase, graphql, codegen
 canonical_url: https://cilly-yllic.github.io/en/notes/firebase-gcp/contract-driven-firebase-codegen/

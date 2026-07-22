@@ -1,6 +1,6 @@
 ---
 title: "Enforce with config, not attention — scope and permission guardrails for coding agents"
-published: false
+published: true
 description: "Enforcing multi-repo coding-agent work with declared scopes and permissions — config that makes accidents impossible, not careful prompts."
 tags: ai, security, devops, productivity
 canonical_url: https://cilly-yllic.github.io/en/notes/ai-agents/scope-and-permission-guardrails-for-coding-agents/

@@ -1,6 +1,6 @@
 ---
 title: "Syncing what comes after provisioning — Cloudflare DNS, Logto, cert-gated proxy, env bundles"
-published: false
+published: true
 description: "Keeping Cloudflare DNS, Logto auth, cert-gated proxying, and encrypted env bundles in sync with the same source of truth as the infra."
 tags: cloudflare, githubactions, devops, security
 canonical_url: https://cilly-yllic.github.io/en/notes/firebase-gcp/platform-sync-dns-logto-proxy-env/

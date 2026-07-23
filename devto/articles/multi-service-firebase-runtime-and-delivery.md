@@ -1,6 +1,6 @@
 ---
 title: "Runtime and delivery of a multi-service Firebase environment"
-published: false
+published: true
 description: "Multiple services in one GCP project: read/write separation, two-layer DB, dual auth tracks, keyless fan-out deploys from an Nx monorepo."
 tags: firebase, gcp, architecture, monorepo
 canonical_url: https://cilly-yllic.github.io/en/notes/firebase-gcp/multi-service-firebase-runtime-and-delivery/

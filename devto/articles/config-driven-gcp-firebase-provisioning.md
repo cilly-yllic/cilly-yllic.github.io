@@ -1,6 +1,6 @@
 ---
 title: "Provisioning GCP / Firebase environments from a single settings.yml"
-published: false
+published: true
 description: "Config-driven, keyless provisioning: one settings.yml per service generates everything from the GCP project to Firebase resources."
 tags: terraform, gcp, firebase, cicd
 canonical_url: https://cilly-yllic.github.io/en/notes/firebase-gcp/config-driven-gcp-firebase-provisioning/

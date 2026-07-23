@@ -1,6 +1,6 @@
 ---
 title: "Treating Firestore as a public cache"
-published: false
+published: true
 description: "Cloud SQL as the source of truth, Firestore as a rebuildable read projection — the design benefits and the costs."
 tags: firebase, database, architecture, gcp
 canonical_url: https://cilly-yllic.github.io/en/notes/firebase-gcp/firestore-as-public-cache/

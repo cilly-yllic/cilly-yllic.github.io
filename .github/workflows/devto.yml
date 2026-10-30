@@ -22,10 +22,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
+      - name: Setup Node.js (mise.toml)
+        uses: jdx/mise-action@v5
 
       - name: Publish articles to dev.to
         run: node scripts/devto-publish.mjs
